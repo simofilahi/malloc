@@ -8,11 +8,13 @@ SRCS = srcs/free.c\
 LIBS = libft/libft.a
 
 OBJS = $(SRCS:%.c=%.o)
+	
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 		@$(CC) $(CFLAG) $(OBJS) $(LIBS) -o $(NAME)
+		./malloc
 
 %.o: %.c
 	@$(CC) $(CFLAG) -c $< -o $@
