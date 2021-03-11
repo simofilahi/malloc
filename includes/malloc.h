@@ -9,10 +9,14 @@
 // REMOVE THIS LATER
 #include <stdio.h>
 
+// #pragma pack(1)
+
 typedef struct s_block
 {
     size_t alloSize;
     struct s_block *next;
+    size_t a;
+
 } t_block;
 
 typedef struct
@@ -21,6 +25,6 @@ typedef struct
     size_t size;
 } memZone;
 
-void free(void *ptr);
-void *malloc(size_t size);
-void *realloc(void *ptr, size_t size);
+// void free(void *ptr);
+// void *malloc(size_t size);
+// void *realloc(void *ptr, size_t size);

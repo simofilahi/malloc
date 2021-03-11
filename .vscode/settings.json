@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "malloc.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "resource.h": "c",
+        "libft.h": "c"
     }
 }

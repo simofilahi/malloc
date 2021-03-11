@@ -1,6 +1,9 @@
 #include "includes/malloc.h"
 
 #include <stdint.h>
+// #include <stdlib.h>
+// #include <stdio.h>
+// #include "./libft/libft.h"
 
 char hex_digit(int v)
 {
@@ -34,13 +37,13 @@ char *fill(char *ptr, int asciiNum)
 {
 
     int i = -1;
-    while (++i < 9)
+    while (++i < 10)
     {
 
         ptr[i] = i + asciiNum;
         // print_address_hex(&ptr[i]);
-        ft_putchar(ptr[i]);
-        ft_putchar('\n');
+        // ft_putchar(ptr[i]);
+        // ft_putchar('\n');
     }
     ptr[i] = '\0';
     return ptr;
@@ -51,10 +54,12 @@ int main()
     char *ptr = NULL;
     char *str = NULL;
 
-    ptr = (char *)malloc(sizeof(char) * 100);
+    ptr = (char *)malloc(sizeof(char) * 11);
     ptr = fill(ptr, 65);
-    str = (char *)malloc(sizeof(char) * 100);
-    str = fill(str, 97);
     logger(ptr, 10);
+    printf("****************************\n");
+    str = (char *)malloc(sizeof(char) * 11);
+    str = fill(str, 97);
+    logger(str, 50);
     return (0);
 }

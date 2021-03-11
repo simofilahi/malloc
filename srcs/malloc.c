@@ -28,10 +28,9 @@ void reserveSpace(t_block **headNode, size_t size)
     size_t totalSize;
 
     currentNode = NULL;
-    nodeSize = sizeof(struct t_block *);
+    nodeSize = sizeof(t_block);
     totalSize = nodeSize + size;
     availableSize = (ZONES[0].size - totalSize);
-    // printf("OUTSIDE THE FIRST IF\n");
     if (availableSize > size)
     {
         // printf("remain size %lu\n", ZONES[0].size);
@@ -66,7 +65,7 @@ void reserveSpace(t_block **headNode, size_t size)
 
 // newAddress = x981
 
-//     startZoneAddress->[                     newAddress-> [ 8bytes->{} | [   ] ]]
+//     startZoneAddress-> 0x[                     next<-newAddress-> x981[ 8bytes->{} | [   ] ]]
 
 void requestMemorySpace()
 {
@@ -75,6 +74,7 @@ void requestMemorySpace()
     size = getpagesize() * 4;
     ZONES[0].startZone = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     ZONES[0].size = size;
+    printf("sizeof StartZone %lu\n", sizeof(ZONES[0].startZone[0]));
     printf("StartedMemoryAddress %p\n", ZONES[0].startZone);
     printf("size of allocated memory %lu\n", ZONES[0].size);
 }
@@ -86,8 +86,8 @@ void show_alloc_mem(t_block **headNode)
     current = *headNode;
     while (current)
     {
-        printf("size of allocation %zu\n", current->alloSize);
-        printf("address of started alloaction %p\n", current);
+        // printf("size of allocation %zu\n", current->alloSize);
+        // printf("address of started alloaction %p\n", current);
         current = current->next;
     }
 }
@@ -99,27 +99,28 @@ void *casting(t_block **headNode)
     current = *headNode;
     while ((*headNode)->next)
         (*headNode) = (*headNode)->next;
-    (*headNode) = (void *)(*headNode);
-    printf("current @ ==> %p\n", *headNode);
-    printf("sizeof Current %lu\n", sizeof((*headNode)));
-    // (*headNode) += 1;
-    printf("headNode @ = %p\n", (*headNode));
-    // void *ptr = (void *)(*headNode);
-    return (*headNode);
+    printf("address before add 1 %p\n", (*headNode));
+    printf("address after add 1 %p\n", (*headNode + 1));
+    return (*headNode + 1);
+}
+
+void dispaly_size_of_infos()
+{
+    printf("size_t    =>%lu\n", sizeof(size_t));
+    printf("char      =>%lu\n", sizeof(char));
+    printf("char *    =>%lu\n", sizeof(char *));
+    printf("void      =>%lu\n", sizeof(void));
+    printf("void *    =>%lu\n", sizeof(void *));
+    printf("t_block   =>%lu\n", sizeof(t_block));
+    printf("t_block * =>%lu\n", sizeof(t_block *));
 }
 
 void *malloc(size_t size)
 {
+    // dispaly_size_of_infos();
     if (!ZONES[0].size)
         requestMemorySpace();
     reserveSpace(&headNode, size);
     // show_alloc_mem(&headNode);
     return casting(&headNode);
 }
-
-// Heap : 10000 bytes
-//     startZone = []
-
-//     requested memory = 100bytes
-
-// 1000
