@@ -1,71 +1,76 @@
 #include "../includes/malloc.h"
 
 memZone ZONES[2];
-t_block *headNode;
-
-t_block head;
 
 void debugger(t_block **node)
 {
-    printf("size of allocation %zu\n", (*node)->alloSize);
+    // printf("size of allocation %zu\n", (*node)->alloSize);
     printf("address of started alloaction %p\n", *node);
 }
 
-void printfHelper(char *str)
-{
-    printf("%s\n", str);
-}
+// void printfHelper(char *str)
+// {
+//     printf("%s\n", str);
+// }
 
 // size_t CalculateAvailabelSize()
 // {
 // }
 
-void reserveSpace(t_block **headNode, size_t size)
+t_block *createNewChunk(t_block *curr, size_t totalSize)
 {
-    t_block *currentNode;
-    size_t nodeSize;
-    size_t availableSize;
-    size_t totalSize;
+    size_t availabeSize;
+    t_block *tmp;
 
-    currentNode = NULL;
-    nodeSize = sizeof(t_block);
-    totalSize = nodeSize + size;
-    availableSize = (ZONES[0].size - totalSize);
-    if (availableSize > size)
+    availabeSize = ZONES[0].size - totalSize;
+    printf("ZONE @ adress %p\n", ZONES[0].startZone);
+    if (availabeSize > totalSize)
     {
-        // printf("remain size %lu\n", ZONES[0].size);
-        if (!(*headNode))
-        {
-            // printfHelper("INSIDE THE IF CONDITION");
-            (*headNode) = ZONES[0].startZone + availableSize;
-            (*headNode)->alloSize = totalSize;
-            (*headNode)->next = NULL;
-            debugger(&(*headNode));
-        }
-        else
-        {
-            // printf("INSIDE THE ELSE CONDITION");
-            while ((*headNode)->next)
-                (*headNode) = (*headNode)->next;
-            currentNode = ZONES[0].startZone + availableSize;
-            currentNode->alloSize = size;
-            currentNode->next = NULL;
-            (*headNode)->next = currentNode;
-        }
-        ZONES[0].size = availableSize;
+        tmp = ZONES[0].startZone;
+        tmp->next = NULL;
+        curr->next = tmp;
+        return tmp;
+    }
+    return NULL;
+}
+
+t_block *findChunk(size_t alloSize)
+{
+    t_block *curr;
+    curr = headNode;
+
+    while (curr->next)
+    {
+        if (!curr->used && curr->size >= alloSize)
+            return curr;
+        curr = curr->next;
+    }
+    return createNewChunk(curr, alloSize);
+}
+
+void fillFirstChunk(size_t alloSize)
+{
+    if (!headNode)
+    {
+        headNode = ZONES[0].startZone;
+        headNode->size = alloSize;
+        headNode->used = true;
+        headNode->next = NULL;
     }
 }
 
-// availableSize = 1000bytes;
-// NodeSize = 8bytes;
-// allocationSize = 11bytes;
-// startZoneAddress = x0;
+void reserveSpace(size_t size)
+{
+    size_t nodeSize;
+    size_t totalSize;
 
-// totalSize = 19bytes
-
-// newAddress = x981
-
-//     startZoneAddress-> 0x[                     next<-newAddress-> x981[ 8bytes->{} | [   ] ]]
+    nodeSize = sizeof(t_block);
+    totalSize = size + nodeSize;
+    fillFirstChunk(totalSize);
+    findChunk(totalSize);
+    ZONES[0].startZone += totalSize;
+    ZONES[0].size -= totalSize;
+}
 
 void requestMemorySpace()
 {
@@ -74,34 +79,19 @@ void requestMemorySpace()
     size = getpagesize() * 4;
     ZONES[0].startZone = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     ZONES[0].size = size;
-    printf("sizeof StartZone %lu\n", sizeof(ZONES[0].startZone[0]));
-    printf("StartedMemoryAddress %p\n", ZONES[0].startZone);
-    printf("size of allocated memory %lu\n", ZONES[0].size);
+    // printf("sizeof StartZone %lu\n", sizeof(ZONES[0].startZone[0]));
+    // printf("StartedMemoryAddress %p\n", ZONES[0].startZone);
+    // printf("size of allocated memory %lu\n", ZONES[0].size);
 }
 
-void show_alloc_mem(t_block **headNode)
+void *casting()
 {
     t_block *current;
 
-    current = *headNode;
-    while (current)
-    {
-        // printf("size of allocation %zu\n", current->alloSize);
-        // printf("address of started alloaction %p\n", current);
+    current = headNode;
+    while (current->next)
         current = current->next;
-    }
-}
-
-void *casting(t_block **headNode)
-{
-    t_block *current;
-
-    current = *headNode;
-    while ((*headNode)->next)
-        (*headNode) = (*headNode)->next;
-    printf("address before add 1 %p\n", (*headNode));
-    printf("address after add 1 %p\n", (*headNode + 1));
-    return (*headNode + 1);
+    return (void *)(current + 1);
 }
 
 void dispaly_size_of_infos()
@@ -120,7 +110,8 @@ void *malloc(size_t size)
     // dispaly_size_of_infos();
     if (!ZONES[0].size)
         requestMemorySpace();
-    reserveSpace(&headNode, size);
+    reserveSpace(size);
     // show_alloc_mem(&headNode);
-    return casting(&headNode);
+    show_alloc_mem();
+    return casting();
 }

@@ -53,13 +53,28 @@ int main()
 {
     char *ptr = NULL;
     char *str = NULL;
+    // char *nbr = NULL;
+    // char *d = NULL;
 
     ptr = (char *)malloc(sizeof(char) * 11);
-    ptr = fill(ptr, 65);
-    logger(ptr, 10);
+    // printf("ret ptr @ => %p\n", ptr);
+    // ptr = fill(ptr, 65);
+    // logger(ptr, 10);
     printf("****************************\n");
     str = (char *)malloc(sizeof(char) * 11);
-    str = fill(str, 97);
-    logger(str, 50);
+    // printf("ret str @ => %p\n", str);
+    // str = fill(str, 97);
+    // logger(str, 10);
+    printf("****************************\n");
+    free(ptr);
+    free(str);
+    ptr = (char *)malloc(sizeof(char) * 11);
+    // logger(ptr, 35);
+    // nbr = (char *)malloc(sizeof(char) * 11);
+    // printf("ret nbr @ => %p\n", nbr);
+    // nbr = fill(str, 97);
+    // d = (char *)malloc(sizeof(char) * 11);
+    // printf("ret d @ => %p\n", d);
+    // free(d);
     return (0);
 }

@@ -4,6 +4,7 @@ CFLAG = -Wextra -Werror -Wall
 SRCS = srcs/free.c\
  	  srcs/realloc.c\
 	  srcs/malloc.c\
+	  srcs/show_alloc_mem.c\
 	  main.c
 LIBS = libft/libft.a
 
