@@ -7,7 +7,8 @@ void show_alloc_mem()
     curr = headNode;
     while (curr)
     {
-        printf("HEADNODE @ => %p\n", curr);
+        // printf("HEADNODE @ => %p\n", curr);
+        // printf("USED %d\n", curr->used);
         curr = curr->next;
     }
 }

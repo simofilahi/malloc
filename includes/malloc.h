@@ -12,8 +12,8 @@
 typedef struct s_block
 {
     size_t size;
-    bool used;
     void *next;
+    bool used;
 } t_block;
 
 t_block *headNode;

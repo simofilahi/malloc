@@ -52,27 +52,36 @@ char *fill(char *ptr, int asciiNum)
 int main()
 {
     char *ptr = NULL;
-    char *str = NULL;
-    // char *nbr = NULL;
+    // char *str = NULL;
+    char *nbr = NULL;
     // char *d = NULL;
 
-    ptr = (char *)malloc(sizeof(char) * 11);
-    // printf("ret ptr @ => %p\n", ptr);
-    // ptr = fill(ptr, 65);
-    // logger(ptr, 10);
-    printf("****************************\n");
-    str = (char *)malloc(sizeof(char) * 11);
-    // printf("ret str @ => %p\n", str);
+    // printf("****************************\n");
+
+    // // logger(ptr, 10);
+    // printf("****************************\n");
+    // str = (char *)malloc(sizeof(char) * 11);
+    // // printf("ret str @ => %p\n", str);
     // str = fill(str, 97);
     // logger(str, 10);
     printf("****************************\n");
-    free(ptr);
-    free(str);
+    nbr = (char *)malloc(sizeof(char) * 11);
+    nbr = fill(nbr, 48);
+    logger(nbr, 10);
+    printf("****************************\n");
     ptr = (char *)malloc(sizeof(char) * 11);
-    // logger(ptr, 35);
-    // nbr = (char *)malloc(sizeof(char) * 11);
+    // printf("ret ptr @ => %p\n", ptr);
+    ptr = fill(ptr, 65);
+    logger(ptr, 10);
+    printf("****************************\n");
+    nbr = realloc(nbr, sizeof(char) * 11);
+    ft_strcat(nbr, "HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello");
+    logger(nbr, 15);
+
     // printf("ret nbr @ => %p\n", nbr);
-    // nbr = fill(str, 97);
+    // nbr = fill(nbr, 48);
+    // // logger(ptr, 100);
+    // printf("****************************\n");
     // d = (char *)malloc(sizeof(char) * 11);
     // printf("ret d @ => %p\n", d);
     // free(d);
