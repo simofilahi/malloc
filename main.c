@@ -77,7 +77,6 @@ int main()
     nbr = realloc(nbr, sizeof(char) * 11);
     ft_strcat(nbr, "HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello");
     logger(nbr, 15);
-
     // printf("ret nbr @ => %p\n", nbr);
     // nbr = fill(nbr, 48);
     // // logger(ptr, 100);

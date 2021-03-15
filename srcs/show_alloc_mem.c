@@ -2,13 +2,20 @@
 
 void show_alloc_mem()
 {
-    t_block *curr;
+    t_memZone *currMemZone;
 
-    curr = headNode;
-    while (curr)
+    currMemZone = headZone;
+    printf("currMemZone @ => %p\n", headZone);
+    while (currMemZone)
     {
-        // printf("HEADNODE @ => %p\n", curr);
-        // printf("USED %d\n", curr->used);
-        curr = curr->next;
+        ft_putendl("holla");
+        printf("_________________________________\n");
+        printf("currMemZone @ => %p\n", currMemZone);
+        printf("currMemZone size %lu\n", currMemZone->size);
+        printf("currMemZone start address @ => %p\n", currMemZone->startZone);
+        printf("headBlock @ %p\n", currMemZone->headBlock);
+        printf("tailBlock @ %p\n", currMemZone->tailBlock);
+        printf("_________________________________\n");
+        currMemZone = currMemZone->next;
     }
 }

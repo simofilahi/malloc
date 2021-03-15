@@ -16,13 +16,16 @@ typedef struct s_block
     bool used;
 } t_block;
 
-t_block *headNode;
-
-typedef struct
+typedef struct s_memZone
 {
     void *startZone;
     size_t size;
-} memZone;
+    void *next;
+    t_block *headBlock;
+    t_block *tailBlock;
+} t_memZone;
+
+t_memZone *headZone;
 
 void free(void *ptr);
 void *malloc(size_t size);

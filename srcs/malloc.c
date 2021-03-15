@@ -1,99 +1,122 @@
 #include "../includes/malloc.h"
 
-memZone ZONES[2];
-
-void debugger(t_block **node)
+void debugger(t_memZone **node)
 {
     printf("address of started alloaction %p\n", *node);
 }
 
-t_block *createNewChunk(t_block *curr, size_t totalSize)
+void addNewZoneToList(t_memZone *newZone)
+{
+    t_memZone *curr;
+
+    if (!headZone)
+    {
+
+        headZone = newZone;
+    }
+
+    else
+    {
+        curr = headZone;
+        debugger(&curr);
+        while (curr->next)
+            curr = curr->next;
+        curr->next = newZone;
+    }
+}
+
+void createNewZone(size_t pages)
+{
+    size_t size;
+    t_memZone *newZone;
+
+    size = getpagesize() * pages;
+    newZone = (t_memZone *)mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    newZone->startZone = newZone + sizeof(t_memZone);
+    newZone->size = size;
+    newZone->next = NULL;
+    addNewZoneToList(newZone);
+}
+
+t_block *createNewBlock(size_t totalSize)
 {
     size_t availabeSize;
     t_block *tmp;
+    t_block *currBlock;
+    t_memZone *currMemZone;
 
-    availabeSize = ZONES[0].size - totalSize;
-    if (availabeSize > totalSize)
+    currMemZone = headZone;
+    while (currMemZone)
     {
-        tmp = ZONES[0].startZone;
-        tmp->used = true;
-        tmp->size = totalSize;
-        tmp->next = NULL;
-        curr->next = tmp;
-        ZONES[0].startZone += totalSize;
-        ZONES[0].size -= totalSize;
-        return tmp;
+        currBlock = currMemZone->headBlock;
+        availabeSize = currMemZone->size - totalSize;
+        if (!currBlock)
+        {
+            currBlock = currMemZone->startZone;
+            currBlock->size = totalSize;
+            currBlock->used = true;
+            currBlock->next = NULL;
+            currMemZone->tailBlock = currMemZone->headBlock;
+            currMemZone->startZone += totalSize;
+            currMemZone->size -= totalSize;
+            return currBlock;
+        }
+        else
+        {
+            if (availabeSize > totalSize)
+            {
+                tmp = currMemZone->startZone;
+                tmp->used = true;
+                tmp->size = totalSize;
+                tmp->next = NULL;
+                currMemZone->tailBlock->next = tmp;
+                currMemZone->tailBlock = currMemZone->tailBlock->next;
+                currMemZone->startZone += totalSize;
+                currMemZone->size -= totalSize;
+                return tmp;
+            }
+        }
+        currMemZone = currMemZone->next;
     }
     return NULL;
 }
 
-t_block *findChunk(size_t totalSize)
+t_block *findBlock(size_t totalSize)
 {
     t_block *curr;
-    t_block *prev;
+    t_memZone *memZoneCurr;
 
-    curr = headNode;
-    prev = curr;
-    while (curr)
+    memZoneCurr = headZone;
+    while (memZoneCurr)
     {
-        if (!curr->used && curr->size >= totalSize && (curr->used = 1))
-            return curr;
-        prev = curr;
-        curr = curr->next;
+        curr = memZoneCurr->headBlock;
+        while (curr)
+        {
+            if (!curr->used && curr->size >= totalSize && (curr->used = 1))
+                return curr;
+            curr = curr->next;
+        }
+        memZoneCurr = memZoneCurr->next;
     }
-    return createNewChunk(prev, totalSize);
-}
-
-t_block *fillFirstChunk(size_t totalSize)
-{
-    if (!headNode)
-    {
-        headNode = ZONES[0].startZone;
-        headNode->size = totalSize;
-        headNode->used = true;
-        headNode->next = NULL;
-        ZONES[0].startZone += totalSize;
-        ZONES[0].size -= totalSize;
-        return headNode;
-    }
-    else
-    {
-        return findChunk(totalSize);
-    }
+    return createNewBlock(totalSize);
 }
 
 t_block *reserveSpace(size_t size)
 {
     size_t nodeSize;
     size_t totalSize;
-    t_block *AlloChunk;
+    t_block *block;
 
     nodeSize = sizeof(t_block);
     totalSize = size + nodeSize;
-    AlloChunk = fillFirstChunk(totalSize);
-    return AlloChunk;
+    block = findBlock(totalSize);
+    return block;
 }
 
 void requestMemorySpace()
 {
-    int size;
-
-    size = getpagesize() * 4;
-    ZONES[0].startZone = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    ZONES[0].size = size;
-    printf("sizeof StartZone %lu\n", sizeof(ZONES[0].startZone[0]));
-    printf("StartedMemoryAddress %p\n", ZONES[0].startZone);
-    printf("size of allocated memory %lu\n", ZONES[0].size);
-}
-
-void *casting()
-{
-    t_block *current;
-
-    current = headNode;
-    while (current->next)
-        current = current->next;
-    return (void *)(current + 1);
+    createNewZone(4);
+    createNewZone(8);
 }
 
 void dispaly_size_of_infos()
@@ -110,13 +133,13 @@ void dispaly_size_of_infos()
 
 void *malloc(size_t size)
 {
-    t_block *alloChunk;
+    t_block *block;
+    t_memZone *headZone;
 
-    // dispaly_size_of_infos();
-    printf("im here\n");
-    if (!ZONES[0].size)
+    headZone = NULL;
+    if (!headZone)
         requestMemorySpace();
-    alloChunk = reserveSpace(size);
+    block = reserveSpace(size);
     show_alloc_mem();
-    return (void *)(alloChunk + 1);
+    return (void *)(block + 1);
 }
