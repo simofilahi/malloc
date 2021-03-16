@@ -2,21 +2,25 @@
 
 void free(void *ptr)
 {
-    ptr = NULL;
-    // t_block *curr;
+    t_block *curr;
+    t_memZone *memZoneCurr;
 
-    // if (!ptr)
-    //     return;
-    // else
-    // {
-    //     ptr = (t_block *)ptr;
-    //     ptr -= sizeof(t_block);
-    //     curr = headNode;
-    //     while (curr != ptr)
-    //         curr = curr->next;
-    //     curr->used = false;
-    //     show_alloc_mem();
-    // }
+    memZoneCurr = headZone;
+    ptr = (t_block *)ptr;
+    ptr -= sizeof(t_block);
+    while (memZoneCurr)
+    {
+        curr = memZoneCurr->headBlock;
+        while (curr)
+        {
+            if (curr == ptr)
+            {
+                curr->used = 0;
+                show_alloc_mem();
+                return;
+            }
+            curr = curr->next;
+        }
+        memZoneCurr = memZoneCurr->next;
+    }
 }
-
-// [[]->[] -> [] -> -> -> [] -> []]
