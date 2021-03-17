@@ -5,6 +5,8 @@ SRCS = srcs/free.c\
  	  srcs/realloc.c\
 	  srcs/malloc.c\
 	  srcs/show_alloc_mem.c\
+	  srcs/malloc_helper.c\
+	  srcs/free_helper.c\
 	  main.c
 LIBS = libft/libft.a
 

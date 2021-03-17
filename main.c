@@ -51,8 +51,8 @@ char *fill(char *ptr, int asciiNum)
 
 int main()
 {
-    // char *ptr = NULL;
-    // char *str = NULL;
+    char *ptr = NULL;
+    char *str = NULL;
     char *nbr = NULL;
     // char *d = NULL;
 
@@ -65,12 +65,24 @@ int main()
     // str = fill(str, 97);
     // logger(str, 10);
     // printf("****************************\n");
-    int i = 0;
-    while (i < 1000)
-    {
-        nbr = (char *)malloc(sizeof(char) * 500);
-        i++;
-    }
+    // int i = 0;
+    // nbr = (char *)malloc(sizeof(char) * 500);
+    // nbr = (char *)malloc(sizeof(char) * 500);
+    // nbr = (char *)malloc(sizeof(char) * 80);
+    // nbr = (char *)malloc(sizeof(char) * 80);
+    // nbr = (char *)malloc(sizeof(char) * 100);
+
+    nbr = (char *)malloc(sizeof(char) * 10000);
+    ptr = (char *)malloc(sizeof(char) * 20000);
+    str = (char *)malloc(sizeof(char) * 30000);
+    free(ptr);
+    // int i = 0;
+
+    // while (i < 1000000)
+    // {
+    //     nbr = (char *)malloc(sizeof(char) * 80);
+    //     i++;
+    // }
 
     // nbr = fill(nbr, 48);
     // logger(nbr, 10);

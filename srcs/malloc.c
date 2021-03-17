@@ -5,6 +5,7 @@ void debugger(t_memZone **node)
     printf("address of started alloaction %p\n", *node);
 }
 
+//  ADD NEW MEMORY ZONE TO LIST
 void addNewZoneToList(t_memZone *newZone)
 {
     t_memZone *curr;
@@ -20,124 +21,183 @@ void addNewZoneToList(t_memZone *newZone)
     }
 }
 
-void createNewZone(size_t pages)
+// REQUEST FROM OS NEW MEMORY ZONE
+void *createNewZone(size_t pages, size_t type)
 {
     size_t size;
-    size_t zoneDataSize;
     t_memZone *newZone;
 
     size = getpagesize() * pages;
-    zoneDataSize = sizeof(t_memZone);
     newZone = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     newZone->startZone = newZone + 1;
-    newZone->size = size + zoneDataSize;
+    newZone->zoneSize = size;
+    newZone->type = type;
     newZone->next = NULL;
     addNewZoneToList(newZone);
+    return newZone;
 }
 
-t_block *fillFirstBlock(t_memZone *currMemZone, size_t totalSize)
+// FILL THE FIRST ALLOCATION BLOCK FROM A ZONE
+void *fillFirstBlock(t_memZone *zone, size_t totalSize)
 {
-    currMemZone->headBlock = currMemZone->startZone;
-    currMemZone->headBlock->size = totalSize;
-    currMemZone->headBlock->used = true;
-    currMemZone->headBlock->next = NULL;
-    currMemZone->tailBlock = currMemZone->headBlock;
-    currMemZone->startZone += totalSize;
-    currMemZone->size -= totalSize;
-    return currMemZone->headBlock;
+    // ft_putendl("I'M HERE");
+    zone->headBlock = zone->startZone;
+    zone->headBlock->blockSize = totalSize;
+    zone->headBlock->used = true;
+    zone->headBlock->next = NULL;
+    zone->tailBlock = zone->headBlock;
+    zone->startZone += totalSize;
+    if (!(zone->type == LARGE_ZONE))
+        zone->zoneSize -= totalSize;
+    return zone->headBlock;
 }
 
-t_block *fillBlock(t_memZone *currMemZone, size_t totalSize)
+// FILL AN ALLOCATION BLOCK
+void *fillBlock(t_memZone *zone, size_t totalSize)
 {
     t_block *block;
 
-    block = currMemZone->startZone;
+    block = zone->startZone;
+    block->blockSize = totalSize;
     block->used = true;
-    block->size = totalSize;
     block->next = NULL;
-    currMemZone->tailBlock->next = block;
-    currMemZone->tailBlock = currMemZone->tailBlock->next;
-    currMemZone->startZone += totalSize;
-    currMemZone->size -= totalSize;
+    zone->tailBlock->next = block;
+    zone->tailBlock = zone->tailBlock->next;
+    zone->startZone += totalSize;
+    zone->zoneSize -= totalSize;
     return block;
 }
 
-t_block *createNewBlock(size_t totalSize)
+void *createExtraZone(size_t totalSize)
 {
-    t_memZone *currMemZone;
+    t_memZone *zone;
 
-    currMemZone = headZone;
-    while (currMemZone)
-    {
-        if (!currMemZone->headBlock)
-            return fillFirstBlock(currMemZone, totalSize);
-        else if (currMemZone->size >= totalSize)
-            return fillBlock(currMemZone, totalSize);
-        currMemZone = currMemZone->next;
-    }
-    createNewZone(8);
-    return createNewBlock(totalSize);
+    zone = createNewZone(EXTRA_ZONE_PAGES, EXTRA_ZONE);
+    if (zone->headBlock)
+        return fillFirstBlock(zone, totalSize);
+    else if (zone->zoneSize >= totalSize)
+        return fillBlock(zone, totalSize);
 }
 
-t_block *findBlock(size_t totalSize)
+// CREATE NEW BLOCK IN A ZONE
+void *createNewBlockInZone(t_memZone *zone, size_t totalSize)
 {
-    t_block *curr;
-    t_memZone *memZoneCurr;
+    if (!zone->headBlock)
+        return fillFirstBlock(zone, totalSize);
+    else if (zone->zoneSize >= totalSize)
+        return fillBlock(zone, totalSize);
+    return createExtraZone(totalSize);
+}
 
-    memZoneCurr = headZone;
-    while (memZoneCurr)
+// FIND FREE BLOCK IN A ZONE
+void *findFreeBlockInZone(t_memZone *zone, size_t totalSize)
+{
+    t_block *headBlock;
+
+    headBlock = zone->headBlock;
+    while (headBlock)
     {
-        curr = memZoneCurr->headBlock;
-        while (curr)
+        if (!headBlock->used && headBlock->blockSize >= totalSize && (headBlock->used = 1))
+            return headBlock;
+        headBlock = headBlock->next;
+    }
+    return createNewBlockInZone(zone, totalSize);
+}
+
+// LOOK IN EXTRA ZONE IF THERE IS A FREE BLOCK
+void *findFreeBlockInExtraZone(size_t totalSize)
+{
+    t_memZone *currZone;
+    t_block *currBlock;
+
+    while (currZone)
+    {
+        if (currZone->type == EXTRA_ZONE)
         {
-            if (!curr->used && curr->size >= totalSize && (curr->used = 1))
-                return curr;
-            curr = curr->next;
+            currBlock = currZone->headBlock;
+            while (currBlock)
+            {
+                if (!currBlock->used && currBlock->blockSize >= totalSize && (currBlock->used = 1))
+                    return currBlock;
+                currBlock = currBlock->next;
+            }
         }
-
-        memZoneCurr = memZoneCurr->next;
     }
-    return createNewBlock(totalSize);
 }
 
-t_block *reserveSpace(size_t size)
+// CREATE LARGE ZONE
+void *createLargeZone(size_t totalSize)
 {
-    size_t nodeSize;
-    size_t totalSize;
+    t_memZone *zone;
+    size_t pages;
+    size_t zoneDataSize;
+
+    zoneDataSize = sizeof(t_memZone);
+    totalSize += zoneDataSize;
+    pages = (totalSize / (size_t)getpagesize()) + 1;
+
+    zone = createNewZone(pages, LARGE_ZONE);
+    t_block *block = createNewBlockInZone(zone, totalSize);
+    return block;
+}
+
+// LOOKING FOR A FREE ALLOCATION BLOCK WITHIN PREALLOCATED ZONES
+void *findFreeBlock(size_t totalSize)
+{
+    t_memZone *tinyZone;
+    t_memZone *smallZone;
+
+    tinyZone = headZone;
+    smallZone = headZone->next;
+    if (totalSize <= MAX_TINY_ZONE_SIZE)
+        return findFreeBlockInZone(tinyZone, totalSize);
+    else if (totalSize <= MAX_SMALL_ZONE_SIZE)
+        return findFreeBlockInZone(smallZone, totalSize);
+    else
+        return createLargeZone(totalSize);
+}
+
+// RESERVE AN ALLOCATION BLOCK
+void *reserveBlock(size_t totalSize)
+{
     t_block *block;
 
-    nodeSize = sizeof(t_block);
-    totalSize = size + nodeSize;
-    block = findBlock(totalSize);
+    block = findFreeBlock(totalSize);
     return block;
 }
 
-void requestMemorySpace()
+// REQUEST TWO PREALLOCATED ZONES IN THE BEGINNING OF PROGRAM
+void preallocateZones()
 {
-    createNewZone(10);
-    createNewZone(20);
+    createNewZone(TINY_ZONE_PAGES, TINY_ZONE);
+    createNewZone(SAMLL_ZONE_PAGES, SMALL_ZONE);
 }
 
-void dispaly_size_of_infos()
-{
-    printf("size_t    =>%lu\n", sizeof(size_t));
-    printf("char      =>%lu\n", sizeof(char));
-    printf("char *    =>%lu\n", sizeof(char *));
-    printf("void      =>%lu\n", sizeof(void));
-    printf("void *    =>%lu\n", sizeof(void *));
-    printf("bool      =>%lu\n", sizeof(bool));
-    printf("t_block   =>%lu\n", sizeof(t_block));
-    printf("t_memZonw  =>%lu\n", sizeof(t_memZone));
-}
+// void dispaly_size_of_infos()
+// {
+//     printf("size_t    =>%lu\n", sizeof(size_t));
+//     printf("char      =>%lu\n", sizeof(char));
+//     printf("char *    =>%lu\n", sizeof(char *));
+//     printf("void      =>%lu\n", sizeof(void));
+//     printf("void *    =>%lu\n", sizeof(void *));
+//     printf("bool      =>%lu\n", sizeof(bool));
+//     printf("t_block   =>%lu\n", sizeof(t_block));
+//     printf("t_memZonw  =>%lu\n", sizeof(t_memZone));
+// }
 
 void *malloc(size_t size)
 {
     t_block *block;
+    size_t nodeSize;
+    size_t totalSize;
 
-    // dispaly_size_of_infos();
+    nodeSize = sizeof(t_block);
+    totalSize = size + nodeSize;
     if (!headZone)
-        requestMemorySpace();
-    block = reserveSpace(size);
-    show_alloc_mem();
+        preallocateZones();
+    if (size == 0)
+        return NULL;
+    block = reserveBlock(totalSize);
+    // show_alloc_mem();
     return (void *)(block + 1);
 }

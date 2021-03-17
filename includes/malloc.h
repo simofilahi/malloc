@@ -9,9 +9,21 @@
 // REMOVE THIS LATER
 #include <stdio.h>
 
+#define MAX_TINY_ZONE_SIZE 128
+#define MAX_SMALL_ZONE_SIZE 4092
+
+#define TINY_ZONE_PAGES 10
+#define SAMLL_ZONE_PAGES 120
+#define EXTRA_ZONE_PAGES 200
+
+#define TINY_ZONE 1
+#define SMALL_ZONE 2
+#define LARGE_ZONE 3
+#define EXTRA_ZONE 4
+
 typedef struct s_block
 {
-    size_t size;
+    size_t blockSize;
     void *next;
     bool used;
 } t_block;
@@ -19,8 +31,9 @@ typedef struct s_block
 typedef struct s_memZone
 {
     void *startZone;
-    size_t size;
     void *next;
+    size_t zoneSize;
+    size_t type;
     t_block *headBlock;
     t_block *tailBlock;
 } t_memZone;
