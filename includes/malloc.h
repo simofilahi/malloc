@@ -9,7 +9,7 @@
 // REMOVE THIS LATER
 #include <stdio.h>
 
-#define MAX_TINY_ZONE_SIZE 128
+#define MAX_TINY_ZONE_SIZE 255
 #define MAX_SMALL_ZONE_SIZE 4092
 
 #define TINY_ZONE_PAGES 10
@@ -20,6 +20,9 @@
 #define SMALL_ZONE 2
 #define LARGE_ZONE 3
 #define EXTRA_ZONE 4
+
+#define SUCCESS 0
+#define FAILED 1
 
 typedef struct s_block
 {
@@ -40,7 +43,27 @@ typedef struct s_memZone
 
 t_memZone *headZone;
 
+// FREE FUNCTIONS;
 void free(void *ptr);
-void *malloc(size_t size);
+
+// REALLOC FUNCTIONS
 void *realloc(void *ptr, size_t size);
+
+// MALLOC FUNCTIONS
+void *malloc(size_t size);
+void *createExtraZone(size_t totalSize);
+void *findFreeBlockInExtraZone(size_t totalSize);
+void *createNewZone(size_t pages, size_t type);
+void *fillFirstBlock(t_memZone *zone, size_t totalSize);
+void *fillBlock(t_memZone *zone, size_t totalSize);
+void *createNewBlockInZone(t_memZone *zone, size_t totalSize);
+
+// ALLOCATION STATE VISUALISATION
 void show_alloc_mem();
+void show_alloc_mem_ex();
+
+// PRINT FUNCTIONS
+void min_printf(void *str, void *ptr, int nflag);
+
+// DEBUGG
+void debugger();

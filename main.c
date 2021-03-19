@@ -5,26 +5,26 @@
 // #include <stdio.h>
 // #include "./libft/libft.h"
 
-char hex_digit(int v)
-{
-    if (v >= 0 && v < 10)
-        return '0' + v;
-    else
-        return 'a' + v - 10; // <-- Here
-}
+// char hex_digit(int v)
+// {
+//     if (v >= 0 && v < 10)
+//         return '0' + v;
+//     else
+//         return 'a' + v - 10;
+// }
 
-void print_address_hex(void *p0)
-{
-    int i;
-    uintptr_t p = (uintptr_t)p0;
+// void print_address_hex(void *p0)
+// {
+//     int i;
+//     uintptr_t p = (uintptr_t)p0;
 
-    ft_putchar('0');
-    ft_putchar('x');
-    for (i = (sizeof(p) << 3) - 4; i >= 0; i -= 4)
-    {
-        ft_putchar(hex_digit((p >> i) & 0xf));
-    }
-}
+//     ft_putchar('0');
+//     ft_putchar('x');
+//     for (i = (sizeof(p) << 3) - 4; i >= 0; i -= 4)
+//     {
+//         ft_putchar(hex_digit((p >> i) & 0xf));
+//     }
+// }
 
 void logger(char *ptr, int limitNum)
 {
@@ -71,11 +71,33 @@ int main()
     // nbr = (char *)malloc(sizeof(char) * 80);
     // nbr = (char *)malloc(sizeof(char) * 80);
     // nbr = (char *)malloc(sizeof(char) * 100);
-
-    nbr = (char *)malloc(sizeof(char) * 10000);
-    ptr = (char *)malloc(sizeof(char) * 20000);
-    str = (char *)malloc(sizeof(char) * 30000);
+    // nbr = (char *)malloc(sizeof(char) * 80);
+    // nbr = (char *)malloc(sizeof(char) * 20);
+    // nbr = (char *)malloc(sizeof(char) * 10);
+    // nbr = (char *)malloc(sizeof(char) * 200);
+    // nbr = (char *)malloc(sizeof(char) * 150);
+    // nbr = (char *)malloc(sizeof(char) * 300);
+    // nbr = (char *)malloc(sizeof(char) * 10000);
+    // ptr = (char *)malloc(sizeof(char) * 20000);
+    // str = (char *)malloc(sizeof(char) * 30000);
+    ptr = (char *)malloc(sizeof(char) * 10);
+    nbr = (char *)malloc(sizeof(char) * 10);
+    str = (char *)malloc(sizeof(char) * 10);
+    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+    show_alloc_mem();
+    debugger();
+    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n");
+    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
     free(ptr);
+    free(nbr);
+    show_alloc_mem();
+    debugger();
+    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n");
+    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+    ptr = (char *)malloc(sizeof(char) * 10);
+    show_alloc_mem();
+    debugger();
+    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n");
     // int i = 0;
 
     // while (i < 1000000)

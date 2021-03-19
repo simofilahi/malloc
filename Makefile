@@ -7,6 +7,7 @@ SRCS = srcs/free.c\
 	  srcs/show_alloc_mem.c\
 	  srcs/malloc_helper.c\
 	  srcs/free_helper.c\
+	  srcs/mini_printf.c\
 	  main.c
 LIBS = libft/libft.a
 
@@ -20,12 +21,13 @@ $(NAME): $(OBJS)
 
 %.o: %.c
 	@$(CC) $(CFLAG) -c $< -o $@
-
+	
 clean:
 	@rm -rf $(OBJS)
 
 fclean: clean
 	@rm -rf $(NAME)
+
 
 help:
 	@echo "SRCS = $(SRCS)"
