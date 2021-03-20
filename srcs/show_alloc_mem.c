@@ -45,6 +45,7 @@ void show_alloc_mem()
     t_block *curr;
     size_t totalSize;
 
+    pthread_mutex_lock(&lock);
     currMemZone = headZone;
     totalSize = 0;
     while (currMemZone)
@@ -63,12 +64,10 @@ void show_alloc_mem()
             if (curr->used)
             {
                 min_printf("", curr, 0);
-                min_printf(" - ", NULL, 0);
-                min_printf("", (curr - curr->blockSize), 0);
+                min_printf(" - ", (curr + curr->blockSize), 0);
                 ft_putstr(" : ");
                 ft_putnbr((int)curr->blockSize);
                 min_printf(" bytes", NULL, 1);
-                ft_putchar('\n');
                 totalSize += curr->blockSize;
             }
             curr = curr->next;
@@ -76,4 +75,5 @@ void show_alloc_mem()
         currMemZone = currMemZone->next;
     }
     printf("Total: %lu bytes\n", totalSize);
+    pthread_mutex_unlock(&lock);
 }

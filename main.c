@@ -1,6 +1,11 @@
 #include "includes/malloc.h"
 
 #include <stdint.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 // #include <stdlib.h>
 // #include <stdio.h>
 // #include "./libft/libft.h"
@@ -49,11 +54,21 @@ char *fill(char *ptr, int asciiNum)
     return ptr;
 }
 
+void *func()
+{
+    char *ptr = NULL;
+
+    // puts("I'M HERE\n");
+    ptr = (char *)malloc(sizeof(char) * 10);
+    show_alloc_mem();
+    return NULL;
+}
+
 int main()
 {
     char *ptr = NULL;
-    char *str = NULL;
-    char *nbr = NULL;
+    // char *str = NULL;
+    // char *nbr = NULL;
     // char *d = NULL;
 
     // printf("****************************\n");
@@ -80,24 +95,34 @@ int main()
     // nbr = (char *)malloc(sizeof(char) * 10000);
     // ptr = (char *)malloc(sizeof(char) * 20000);
     // str = (char *)malloc(sizeof(char) * 30000);
+    // ptr = (char *)malloc(sizeof(char) * 10);
+    // nbr = (char *)malloc(sizeof(char) * 10);
+    // str = (char *)malloc(sizeof(char) * 10);
+    // // printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+    // // show_alloc_mem();
+    // // debugger();
+    // // printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n");
+    // // printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+    // free(ptr);
+    // free(nbr);
+    // show_alloc_mem();
+    // debugger();
+    // printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n");
+    // printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+    pthread_mutex_init(&lock, NULL);
+    pthread_t thread_id;
+    int error = pthread_create(&thread_id, NULL, func, NULL);
+    if (error != 0)
+        printf("\nThread can't be created : [%s]", strerror(error));
+
+    // puts("I'M HERE 2\n");
     ptr = (char *)malloc(sizeof(char) * 10);
-    nbr = (char *)malloc(sizeof(char) * 10);
-    str = (char *)malloc(sizeof(char) * 10);
-    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
     show_alloc_mem();
-    debugger();
-    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n");
-    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
-    free(ptr);
-    free(nbr);
-    show_alloc_mem();
-    debugger();
-    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n");
-    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
-    ptr = (char *)malloc(sizeof(char) * 10);
-    show_alloc_mem();
-    debugger();
-    printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n");
+    pthread_join(thread_id, NULL);
+    pthread_mutex_destroy(&lock);
+    // show_alloc_mem();
+    // debugger();
+    // printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n");
     // int i = 0;
 
     // while (i < 1000000)

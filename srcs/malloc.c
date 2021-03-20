@@ -78,17 +78,37 @@ void *createNewBlockInZone(t_memZone *zone, size_t totalSize)
     return NULL;
 }
 
+// // SPLIT MERGED BLOCKS
+void *
+splitMergedBlocks(t_block *block, size_t totalSize)
+{
+    t_block *newBlock;
+
+    if (block->blockSize > totalSize)
+    {
+        block->blockSize = block->blockSize - totalSize;
+        newBlock = block + totalSize;
+        newBlock->used = 0;
+        newBlock->next = block->next;
+        newBlock->blockSize = block->blockSize - totalSize;
+    }
+    return block;
+}
+
 // FIND FREE BLOCK IN A ZONE
 void *findFreeBlockInZone(t_memZone *zone, size_t totalSize)
 {
-    t_block *headBlock;
+    t_block *currBlock;
 
-    headBlock = zone->headBlock;
-    while (headBlock)
+    currBlock = zone->headBlock;
+    while (currBlock)
     {
-        if (!headBlock->used && headBlock->blockSize >= totalSize && (headBlock->used = 1))
-            return headBlock;
-        headBlock = headBlock->next;
+        if (!currBlock->used && currBlock->blockSize >= totalSize && (currBlock->used = 1))
+        {
+            return currBlock;
+            // return splitMergedBlocks(currBlock, totalSize);
+        }
+        currBlock = currBlock->next;
     }
     return createNewBlockInZone(zone, totalSize);
 }
@@ -149,6 +169,7 @@ void *malloc(size_t size)
     size_t nodeSize;
     size_t totalSize;
 
+    pthread_mutex_lock(&lock);
     nodeSize = sizeof(t_block);
     totalSize = size + nodeSize;
     if (!headZone)
@@ -156,6 +177,6 @@ void *malloc(size_t size)
     if (size == 0)
         return NULL;
     block = requestBlock(totalSize);
-    // show_alloc_mem();
+    pthread_mutex_unlock(&lock);
     return (void *)(block + 1);
 }

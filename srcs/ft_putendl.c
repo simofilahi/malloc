@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_putendl.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/18 09:12:35 by mfilahi           #+#    #+#             */
-/*   Updated: 2018/10/18 09:15:06 by mfilahi          ###   ########.fr       */
+/*   Created: 2018/10/20 09:45:25 by mfilahi           #+#    #+#             */
+/*   Updated: 2018/10/20 09:47:32 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/malloc.h"
 
-void ft_bzero(void *s, size_t n)
+void ft_putendl(char const *s)
 {
-	ft_memset(s, 0, n);
+	while (*s)
+		ft_putchar(*s++);
+	write(1, "\n", 1);
 }

@@ -6,8 +6,6 @@ void mergeBlock(t_block *prevBlock, t_block *currBlock)
     if ((prevBlock != currBlock) &&
         (!prevBlock->used && !currBlock->used))
     {
-        printf("prevBlock->blockSize %lu\n", prevBlock->blockSize);
-        printf("currBlock->blockSize %lu\n", currBlock->blockSize);
         prevBlock->blockSize += currBlock->blockSize;
         prevBlock->next = currBlock->next;
     }
@@ -100,6 +98,7 @@ void free(void *ptr)
     t_memZone *smallZone;
     t_block *curr;
 
+    pthread_mutex_lock(&lock);
     if (!ptr)
         return;
     tinyZone = headZone;
@@ -111,4 +110,5 @@ void free(void *ptr)
         freeByZone(smallZone, curr);
     else
         freeByLargeZone(curr);
+    pthread_mutex_unlock(&lock);
 }

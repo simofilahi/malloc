@@ -4,15 +4,17 @@
 #include <sys/mman.h>
 #include <sys/time.h>
 #include <sys/resource.h>
-#include "../libft/libft.h"
+#include <pthread.h>
 
 // REMOVE THIS LATER
 #include <stdio.h>
+#include <string.h>
+extern int errno;
 
 #define MAX_TINY_ZONE_SIZE 255
 #define MAX_SMALL_ZONE_SIZE 4092
 
-#define TINY_ZONE_PAGES 10
+#define TINY_ZONE_PAGES 8000
 #define SAMLL_ZONE_PAGES 120
 #define EXTRA_ZONE_PAGES 200
 
@@ -23,6 +25,8 @@
 
 #define SUCCESS 0
 #define FAILED 1
+
+pthread_mutex_t lock;
 
 typedef struct s_block
 {
@@ -67,3 +71,12 @@ void min_printf(void *str, void *ptr, int nflag);
 
 // DEBUGG
 void debugger();
+
+// LIBFT FUNCTIONS
+void *ft_memcpy(void *dst, const void *src, size_t n);
+void ft_putchar(char c);
+void ft_putstr(char const *s);
+void ft_putendl(char const *s);
+void ft_putnbr(int n);
+size_t ft_strlen(const char *s);
+void ft_bzero(void *s, size_t n);

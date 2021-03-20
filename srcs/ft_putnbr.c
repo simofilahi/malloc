@@ -1,18 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/18 09:12:35 by mfilahi           #+#    #+#             */
-/*   Updated: 2018/10/18 09:15:06 by mfilahi          ###   ########.fr       */
+/*   Created: 2018/10/20 09:47:46 by mfilahi           #+#    #+#             */
+/*   Updated: 2018/10/20 10:02:30 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/malloc.h"
 
-void ft_bzero(void *s, size_t n)
+void ft_putnbr(int n)
 {
-	ft_memset(s, 0, n);
+	unsigned int nbr;
+
+	nbr = n;
+	if (n < 0)
+	{
+		ft_putchar('-');
+		nbr = -n;
+	}
+	if (nbr / 10 != 0)
+		ft_putnbr(nbr / 10);
+	ft_putchar(nbr % 10 + 48);
 }
