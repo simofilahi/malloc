@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/18 12:05:49 by mfilahi           #+#    #+#             */
-/*   Updated: 2018/10/18 12:11:28 by mfilahi          ###   ########.fr       */
+/*   Created: 2018/10/18 09:12:35 by mfilahi           #+#    #+#             */
+/*   Updated: 2018/10/18 09:15:06 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/malloc.h"
+#include "../../includes/malloc.h"
 
-size_t ft_strlen(const char *s)
+void ft_bzero(void *s, size_t n)
 {
-	size_t len;
-
-	len = 0;
-	if (!s)
-		return (len);
-	while (s[len] && ++len)
-		;
-	return (len);
+	ft_memset(s, 0, n);
 }

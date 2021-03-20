@@ -14,16 +14,18 @@ SRCS = srcs/free.c\
  	  srcs/realloc.c\
 	  srcs/malloc.c\
 	  srcs/show_alloc_mem.c\
-	  srcs/malloc_helper.c\
-	  srcs/ft_memcpy.c\
-	  srcs/ft_putchar.c\
-	  srcs/ft_putendl.c\
-	  srcs/ft_strlen.c\
-	  srcs/ft_putstr.c\
-	  srcs/ft_putnbr.c\
 	  srcs/show_alloc_mem_ex.c\
+	  srcs/malloc_helper.c\
+	  srcs/free_helper.c\
+	  srcs/libft_func/ft_memcpy.c\
+	  srcs/libft_func/ft_putchar.c\
+	  srcs/libft_func/ft_putendl.c\
+	  srcs/libft_func/ft_strlen.c\
+	  srcs/libft_func/ft_putstr.c\
+	  srcs/libft_func/ft_putnbr.c\
+	  srcs/show_alloc_mem_ex.c\
+	  srcs/mem_zone.c\
 	  srcs/mini_printf.c\
-	  main.c
 
 PTHREAD_LIB = -lpthread
 

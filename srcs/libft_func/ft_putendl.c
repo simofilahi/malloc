@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_putendl.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/20 09:42:03 by mfilahi           #+#    #+#             */
-/*   Updated: 2018/10/21 11:05:44 by mfilahi          ###   ########.fr       */
+/*   Created: 2018/10/20 09:45:25 by mfilahi           #+#    #+#             */
+/*   Updated: 2018/10/20 09:47:32 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/malloc.h"
+#include "../../includes/malloc.h"
 
-void ft_putchar(char c)
+void ft_putendl(char const *s)
 {
-	write(1, &c, 1);
+	while (*s)
+		ft_putchar(*s++);
+	write(1, "\n", 1);
 }

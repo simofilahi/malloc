@@ -1,20 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putendl.c                                       :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/20 09:45:25 by mfilahi           #+#    #+#             */
-/*   Updated: 2018/10/20 09:47:32 by mfilahi          ###   ########.fr       */
+/*   Created: 2018/10/18 09:16:01 by mfilahi           #+#    #+#             */
+/*   Updated: 2018/10/21 10:34:55 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/malloc.h"
+#include "../../includes/malloc.h"
 
-void ft_putendl(char const *s)
+void *ft_memcpy(void *dst, const void *src, size_t n)
 {
-	while (*s)
-		ft_putchar(*s++);
-	write(1, "\n", 1);
+	char *d;
+	char *s;
+
+	d = (char *)dst;
+	s = (char *)src;
+	if (d == s || n == 0)
+		return (d);
+	while (n--)
+		*d++ = *s++;
+	return (dst);
 }

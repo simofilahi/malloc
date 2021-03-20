@@ -8,16 +8,17 @@
 
 // REMOVE THIS LATER
 #include <stdio.h>
-#include <string.h>
-extern int errno;
 
+// MAX SIZE OF AN ALLOCATION IN A ZONE
 #define MAX_TINY_ZONE_SIZE 255
 #define MAX_SMALL_ZONE_SIZE 4092
 
-#define TINY_ZONE_PAGES 8000
+// MMAP PAGES
+#define TINY_ZONE_PAGES 50
 #define SAMLL_ZONE_PAGES 120
-#define EXTRA_ZONE_PAGES 200
+#define EXTRA_ZONE_PAGES 16
 
+// DEFINITION OF ZONES
 #define TINY_ZONE 1
 #define SMALL_ZONE 2
 #define LARGE_ZONE 3
@@ -26,8 +27,10 @@ extern int errno;
 #define SUCCESS 0
 #define FAILED 1
 
+// THREAD SAFE GLOBAL VARIABLE
 pthread_mutex_t lock;
 
+// BLOCK STRUCTURE
 typedef struct s_block
 {
     size_t blockSize;
@@ -35,6 +38,7 @@ typedef struct s_block
     bool used;
 } t_block;
 
+// ZONE STRUCTURE
 typedef struct s_memZone
 {
     void *startZone;
@@ -45,10 +49,17 @@ typedef struct s_memZone
     t_block *tailBlock;
 } t_memZone;
 
+// FIRST ZONE GLOBAL VARIABLE
 t_memZone *headZone;
+
+// MEMORY ZONES
+void *createNewZone(size_t pages, size_t type);
+void addNewZoneToList(t_memZone *newZone);
+void *createLargeZone(size_t totalSize);
 
 // FREE FUNCTIONS;
 void free(void *ptr);
+void mergeBlock(t_block *prevBlock, t_block *currBlock);
 
 // REALLOC FUNCTIONS
 void *realloc(void *ptr, size_t size);
@@ -63,6 +74,8 @@ void *findFreeBlockInExtraZone(size_t totalSize);
 void *createNewZone(size_t pages, size_t type);
 void *fillFirstBlock(t_memZone *zone, size_t totalSize);
 void *fillBlock(t_memZone *zone, size_t totalSize);
+void *createNewBlockInZone(t_memZone *zone, size_t totalSize);
+void *splitMergedBlocks(t_block *block, size_t totalSize);
 void *createNewBlockInZone(t_memZone *zone, size_t totalSize);
 
 // ALLOCATION STATE VISUALISATION

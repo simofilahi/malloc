@@ -48,3 +48,32 @@ void *findFreeBlockInExtraZone(size_t totalSize)
     }
     return (getEmptyExtraZone(totalSize));
 }
+
+// // SPLIT MERGED BLOCKS
+void *splitMergedBlocks(t_block *block, size_t totalSize)
+{
+    t_block *newBlock;
+    t_block *tmp;
+
+    if (block->blockSize > totalSize)
+    {
+        newBlock = block + totalSize;
+        newBlock->blockSize = block->blockSize - totalSize;
+        newBlock->used = 0;
+        block->blockSize = block->blockSize - totalSize;
+        tmp = block->next;
+        block->next = newBlock;
+        newBlock->next = tmp;
+    }
+    return block;
+}
+
+// CREATE NEW BLOCK IN A ZONE
+void *createNewBlockInZone(t_memZone *zone, size_t totalSize)
+{
+    if (!zone->headBlock)
+        return fillFirstBlock(zone, totalSize);
+    else
+        return fillBlock(zone, totalSize);
+    return NULL;
+}

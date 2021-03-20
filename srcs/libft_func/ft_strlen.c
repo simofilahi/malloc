@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putnbr.c                                        :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/20 09:47:46 by mfilahi           #+#    #+#             */
-/*   Updated: 2018/10/20 10:02:30 by mfilahi          ###   ########.fr       */
+/*   Created: 2018/10/18 12:05:49 by mfilahi           #+#    #+#             */
+/*   Updated: 2018/10/18 12:11:28 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/malloc.h"
+#include "../../includes/malloc.h"
 
-void ft_putnbr(int n)
+size_t ft_strlen(const char *s)
 {
-	unsigned int nbr;
+	size_t len;
 
-	nbr = n;
-	if (n < 0)
-	{
-		ft_putchar('-');
-		nbr = -n;
-	}
-	if (nbr / 10 != 0)
-		ft_putnbr(nbr / 10);
-	ft_putchar(nbr % 10 + 48);
+	len = 0;
+	if (!s)
+		return (len);
+	while (s[len] && ++len)
+		;
+	return (len);
 }

@@ -1,6 +1,6 @@
 #include "../includes/malloc.h"
 
-void print_zones_name(t_memZone *currMemZone)
+static void print_zones_name(t_memZone *currMemZone)
 {
     if (currMemZone->type == TINY_ZONE)
         min_printf("TINY : ", currMemZone, 0);
@@ -12,7 +12,7 @@ void print_zones_name(t_memZone *currMemZone)
         min_printf("LARGE : ", currMemZone, 0);
 }
 
-void print_blocks_infos(t_block *curr)
+static void print_blocks_infos(t_block *curr)
 {
     min_printf("   -> BLOCK          : ", curr, 0);
     printf(" block @ %p\n", curr);
