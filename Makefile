@@ -21,6 +21,7 @@ SRCS = srcs/free.c\
 	  srcs/ft_strlen.c\
 	  srcs/ft_putstr.c\
 	  srcs/ft_putnbr.c\
+	  srcs/show_alloc_mem_ex.c\
 	  srcs/mini_printf.c\
 	  main.c
 

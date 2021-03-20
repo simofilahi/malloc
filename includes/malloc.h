@@ -53,6 +53,9 @@ void free(void *ptr);
 // REALLOC FUNCTIONS
 void *realloc(void *ptr, size_t size);
 
+// REALLOCF FUNCTIONS
+void *reallocf(void *ptr, size_t size);
+
 // MALLOC FUNCTIONS
 void *malloc(size_t size);
 void *createExtraZone(size_t totalSize);

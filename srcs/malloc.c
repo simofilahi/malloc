@@ -79,18 +79,20 @@ void *createNewBlockInZone(t_memZone *zone, size_t totalSize)
 }
 
 // // SPLIT MERGED BLOCKS
-void *
-splitMergedBlocks(t_block *block, size_t totalSize)
+void *splitMergedBlocks(t_block *block, size_t totalSize)
 {
     t_block *newBlock;
+    t_block *tmp;
 
     if (block->blockSize > totalSize)
     {
-        block->blockSize = block->blockSize - totalSize;
         newBlock = block + totalSize;
-        newBlock->used = 0;
-        newBlock->next = block->next;
         newBlock->blockSize = block->blockSize - totalSize;
+        newBlock->used = 0;
+        block->blockSize = block->blockSize - totalSize;
+        tmp = block->next;
+        block->next = newBlock;
+        newBlock->next = tmp;
     }
     return block;
 }
@@ -104,10 +106,7 @@ void *findFreeBlockInZone(t_memZone *zone, size_t totalSize)
     while (currBlock)
     {
         if (!currBlock->used && currBlock->blockSize >= totalSize && (currBlock->used = 1))
-        {
-            return currBlock;
-            // return splitMergedBlocks(currBlock, totalSize);
-        }
+            return splitMergedBlocks(currBlock, totalSize);
         currBlock = currBlock->next;
     }
     return createNewBlockInZone(zone, totalSize);
@@ -150,18 +149,6 @@ void preallocateZones()
     createNewZone(TINY_ZONE_PAGES, TINY_ZONE);
     createNewZone(SAMLL_ZONE_PAGES, SMALL_ZONE);
 }
-
-// void dispaly_size_of_infos()
-// {
-//     printf("size_t    =>%lu\n", sizeof(size_t));
-//     printf("char      =>%lu\n", sizeof(char));
-//     printf("char *    =>%lu\n", sizeof(char *));
-//     printf("void      =>%lu\n", sizeof(void));
-//     printf("void *    =>%lu\n", sizeof(void *));
-//     printf("bool      =>%lu\n", sizeof(bool));
-//     printf("t_block   =>%lu\n", sizeof(t_block));
-//     printf("t_memZonw  =>%lu\n", sizeof(t_memZone));
-// }
 
 void *malloc(size_t size)
 {

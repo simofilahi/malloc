@@ -39,10 +39,26 @@ void debugger()
     ft_putendl("*******************\n");
 }
 
+void print_blocks_infos(t_block *curr, size_t *totalSize)
+{
+    while (curr)
+    {
+        if (curr->used)
+        {
+            min_printf("", curr, 0);
+            min_printf(" - ", (curr + curr->blockSize), 0);
+            ft_putstr(" : ");
+            ft_putnbr((int)curr->blockSize);
+            min_printf(" bytes", NULL, 1);
+            *totalSize += curr->blockSize;
+        }
+        curr = curr->next;
+    }
+}
+
 void show_alloc_mem()
 {
     t_memZone *currMemZone;
-    t_block *curr;
     size_t totalSize;
 
     pthread_mutex_lock(&lock);
@@ -58,20 +74,7 @@ void show_alloc_mem()
             min_printf("EXTRA: ", currMemZone, 1);
         else
             min_printf("LARGE: ", currMemZone, 1);
-        curr = currMemZone->headBlock;
-        while (curr)
-        {
-            if (curr->used)
-            {
-                min_printf("", curr, 0);
-                min_printf(" - ", (curr + curr->blockSize), 0);
-                ft_putstr(" : ");
-                ft_putnbr((int)curr->blockSize);
-                min_printf(" bytes", NULL, 1);
-                totalSize += curr->blockSize;
-            }
-            curr = curr->next;
-        }
+        print_blocks_infos(currMemZone->headBlock, &totalSize);
         currMemZone = currMemZone->next;
     }
     printf("Total: %lu bytes\n", totalSize);

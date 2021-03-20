@@ -19,7 +19,10 @@ void min_printf(void *str, void *ptr, int nflag)
     if (str)
         ft_putstr(str);
     if (ptr)
-        print_address_hex((unsigned long)ptr);
+    {
+        ft_putstr("0x");
+        print_address_hex((((unsigned long)ptr) * 16));
+    }
     if (nflag)
         ft_putchar('\n');
 }
