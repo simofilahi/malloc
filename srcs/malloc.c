@@ -9,8 +9,7 @@ void *fillFirstBlock(t_memZone *zone, size_t totalSize)
     zone->headBlock->next = NULL;
     zone->tailBlock = zone->headBlock;
     zone->startZone += totalSize;
-    if (!(zone->type == LARGE_ZONE))
-        zone->zoneSize -= totalSize;
+    zone->zoneSize -= totalSize;
     return zone->headBlock;
 }
 
@@ -85,7 +84,8 @@ void *malloc(size_t size)
     }
     if (size == 0)
         return NULL;
-    block = requestBlock(totalSize);
+    if (!(block = requestBlock(totalSize)))
+        return NULL;
     pthread_mutex_unlock(&lock);
     return (void *)(block + 1);
 }

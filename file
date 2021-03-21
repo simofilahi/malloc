@@ -1,0 +1,17 @@
+
+*************************************
+TINY : 0x00103ab4000, 245572 bytes 
+   -> BLOCK          : 0x00103ab4048 - 0x00103ab4053
+     - USED          : YES
+     - SIZE          : 11 bytes
+   -> BLOCK          : 0x00103ab406b - 0x00103ab4076
+     - USED          : YES
+     - SIZE          : 11 bytes
+   -> BLOCK          : 0x00103ab408e - 0x00103ab4099
+     - USED          : YES
+     - SIZE          : 11 bytes
+   -> BLOCK          : 0x00103ab40b1 - 0x00103ab40bc
+     - USED          : YES
+     - SIZE          : 11 bytes
+SMALL : 0x00103af0000, 491472 bytes 
+*************************************

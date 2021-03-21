@@ -31,7 +31,6 @@ void *findFreeBlockInExtraZone(size_t totalSize)
     t_memZone *currZone;
 
     currZone = headZone;
-
     while (currZone)
     {
         if (currZone->type == EXTRA_ZONE)
@@ -53,17 +52,20 @@ void *findFreeBlockInExtraZone(size_t totalSize)
 void *splitMergedBlocks(t_block *block, size_t totalSize)
 {
     t_block *newBlock;
-    t_block *tmp;
 
+    newBlock = NULL;
     if (block->blockSize > totalSize)
     {
-        newBlock = block + totalSize;
+        newBlock = block + (block->blockSize - totalSize);
         newBlock->blockSize = block->blockSize - totalSize;
         newBlock->used = 0;
-        block->blockSize = block->blockSize - totalSize;
-        tmp = block->next;
+        if (block->mergedCount > 0)
+            newBlock->mergedCount = block->mergedCount - 1;
+        newBlock->next = block->next;
+        block->mergedCount = 0;
+        block->blockSize = totalSize;
+        block->used = 1;
         block->next = newBlock;
-        newBlock->next = tmp;
     }
     return block;
 }

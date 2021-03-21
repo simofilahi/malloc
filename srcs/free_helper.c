@@ -8,5 +8,6 @@ void mergeBlock(t_block *prevBlock, t_block *currBlock)
     {
         prevBlock->blockSize += currBlock->blockSize;
         prevBlock->next = currBlock->next;
+        prevBlock->mergedCount++;
     }
 }

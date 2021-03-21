@@ -60,30 +60,56 @@ void *func()
 
     // puts("I'M HERE\n");
     ptr = (char *)malloc(sizeof(char) * 10);
-    show_alloc_mem();
+    // show_alloc_mem();
     return NULL;
 }
 
 int main()
 {
-    char *ptr = NULL;
-    char *str = NULL;
-    char *nbr = NULL;
-    // char *d = NULL;
 
-    ptr = (char *)malloc(sizeof(char) * 10);
-    str = (char *)malloc(sizeof(char) * 10);
-    nbr = (char *)malloc(sizeof(char) * 10);
-    show_alloc_mem_ex();
-    free(ptr);
-    free(str);
-    show_alloc_mem_ex();
-    ptr = (char *)malloc(sizeof(char) * 10);
-    show_alloc_mem_ex();
-    ptr = (char *)malloc(sizeof(char) * 11111);
-    show_alloc_mem_ex();
-    free(NULL);
-    show_alloc_mem_ex();
+    int i;
+    char *addr;
+
+    i = 0;
+    addr = NULL;
+    while (i < 1024)
+    {
+        // addr = (char *)malloc(1024);
+        // addr[0] = 42;
+        i++;
+    }
+    return 0;
+
+    // char *ptr = NULL;
+    // char *str = NULL;
+    // // char *nbr = NULL;
+    // // char *d = NULL;
+    // // char *s = NULL;
+
+    // ptr = (char *)malloc(sizeof(char) * 11);
+    // fill(ptr, 65);
+    // logger(ptr, 10);
+    // show_alloc_mem_ex();
+    // free(ptr);
+    // show_alloc_mem_ex();
+    // ptr = (char *)realloc(ptr, 30);
+    // logger(ptr, 10);
+    // show_alloc_mem_ex();
+    // nbr = (char *)malloc(sizeof(char) * 80);
+    // str = (char *)malloc(sizeof(char) * 220);
+    // d = (char *)malloc(sizeof(char) * 110);
+
+    // ptr = (char *)malloc(sizeof(char) * 11);
+    // show_alloc_mem_ex();
+    // free(ptr);
+    // free(str);
+    // show_alloc_mem_ex();
+    // ptr = (char *)malloc(sizeof(char) * 10);
+    // show_alloc_mem_ex();
+    // ptr = (char *)malloc(sizeof(char) * 11111);
+    // show_alloc_mem_ex();
+    // free(NULL);
+    // show_alloc_mem_ex();
     // pthread_mutex_init(&lock, NULL);
     // pthread_t thread_id;
     // int error = pthread_create(&thread_id, NULL, func, NULL);

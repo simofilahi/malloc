@@ -1,61 +1,44 @@
 #include "../includes/malloc.h"
 
-void debugger()
+// PRINT MEMORY ZONE NAME
+void print_mem_names(t_memZone *currMemZone)
 {
-    t_memZone *currMemZone;
-
-    currMemZone = headZone;
-    printf("head %p\n", headZone);
-    ft_putendl("*******************\n");
-    while (currMemZone)
-    {
-        printf("_________________________________\n");
-        printf("currMemZone @ => %p\n", currMemZone);
-        printf("currMemZone size %lu\n", currMemZone->zoneSize);
-        printf("currMemZone start address @ => %p\n", currMemZone->startZone);
-        printf("currMemZone headblock address @ => %p\n", currMemZone->headBlock);
-        if (currMemZone->type == TINY_ZONE)
-            printf("THIS IS A TINY ZONE\n");
-        else if (currMemZone->type == SMALL_ZONE)
-            printf("THIS IS A SMALL ZONE\n");
-        else if (currMemZone->type == EXTRA_ZONE)
-            printf("THIS IS AN EXTRA ZONE\n");
-        else
-            printf("THIS IS A LARGE ZONE\n");
-        printf("_________________________________\n");
-        t_block *curr;
-        curr = currMemZone->headBlock;
-        while (curr)
-        {
-            printf("++++++++++++++++++++++++++++\n");
-            printf("curr->size %lu\n", curr->blockSize);
-            printf("curr->used %d\n", curr->used);
-            printf("++++++++++++++++++++++++++++\n");
-            curr = curr->next;
-        }
-
-        currMemZone = currMemZone->next;
-    }
-    ft_putendl("*******************\n");
+    if (currMemZone->type == TINY_ZONE)
+        min_printf("TINY : ", currMemZone, 1);
+    else if (currMemZone->type == SMALL_ZONE)
+        min_printf("SMALL: ", currMemZone, 1);
+    else if (currMemZone->type == EXTRA_ZONE)
+        min_printf("EXTRA: ", currMemZone, 1);
+    else
+        min_printf("LARGE: ", currMemZone, 1);
 }
 
+// PRINT MEMORY BLOCK INFORMATION
 void print_blocks_infos(t_block *curr, size_t *totalSize)
 {
+    size_t blockSize;
+
+    blockSize = 0;
     while (curr)
     {
         if (curr->used)
         {
-            min_printf("", curr, 0);
-            min_printf(" - ", (curr + curr->blockSize), 0);
+            if (!curr->mergedCount)
+                blockSize = curr->blockSize - sizeof(t_block);
+            else
+                blockSize = curr->blockSize - (sizeof(t_block) * (curr->mergedCount + 1));
+            min_printf("", curr + 1, 0);
+            min_printf(" - ", (((void *)(curr + 1)) + blockSize), 0);
             ft_putstr(" : ");
-            ft_putnbr((int)curr->blockSize);
+            ft_putnbr((long)blockSize);
             min_printf(" bytes", NULL, 1);
-            *totalSize += curr->blockSize;
+            *totalSize += blockSize;
         }
         curr = curr->next;
     }
 }
 
+// DISPLAY MEMORY ALLOCATION DETAILS
 void show_alloc_mem()
 {
     t_memZone *currMemZone;
@@ -66,17 +49,12 @@ void show_alloc_mem()
     totalSize = 0;
     while (currMemZone)
     {
-        if (currMemZone->type == TINY_ZONE)
-            min_printf("TINY : ", currMemZone, 1);
-        else if (currMemZone->type == SMALL_ZONE)
-            min_printf("SMALL: ", currMemZone, 1);
-        else if (currMemZone->type == EXTRA_ZONE)
-            min_printf("EXTRA: ", currMemZone, 1);
-        else
-            min_printf("LARGE: ", currMemZone, 1);
+        print_mem_names(currMemZone);
         print_blocks_infos(currMemZone->headBlock, &totalSize);
         currMemZone = currMemZone->next;
     }
-    printf("Total: %lu bytes\n", totalSize);
+    ft_putstr("Total: ");
+    ft_putnbr((long)totalSize);
+    ft_putendl(" bytes");
     pthread_mutex_unlock(&lock);
 }

@@ -12,9 +12,9 @@
 
 #include "../../includes/malloc.h"
 
-void ft_putnbr(int n)
+void ft_putnbr(long n)
 {
-	unsigned int nbr;
+	unsigned long nbr;
 
 	nbr = n;
 	if (n < 0)

@@ -20,12 +20,14 @@ void addNewZoneToList(t_memZone *newZone)
 void *createNewZone(size_t pages, size_t type)
 {
     size_t size;
+    size_t zoneSize;
     t_memZone *newZone;
 
-    size = getpagesize() * pages;
+    zoneSize = sizeof(t_memZone);
+    size = (size_t)getpagesize() * pages;
     newZone = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    newZone->startZone = newZone + 1;
-    newZone->zoneSize = size - sizeof(t_memZone);
+    newZone->startZone = (void *)newZone + zoneSize;
+    newZone->zoneSize = size - zoneSize;
     newZone->type = type;
     newZone->next = NULL;
     addNewZoneToList(newZone);
@@ -40,7 +42,6 @@ void *createLargeZone(size_t totalSize)
     size_t zoneDataSize;
 
     zoneDataSize = sizeof(t_memZone);
-    totalSize += zoneDataSize;
     pages = (totalSize / (size_t)getpagesize()) + 1;
     zone = createNewZone(pages, LARGE_ZONE);
     return (createNewBlockInZone(zone, totalSize));

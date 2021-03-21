@@ -15,8 +15,8 @@
 
 // MMAP PAGES
 #define TINY_ZONE_PAGES 50
-#define SAMLL_ZONE_PAGES 120
-#define EXTRA_ZONE_PAGES 16
+#define SAMLL_ZONE_PAGES 200
+#define EXTRA_ZONE_PAGES 250
 
 // DEFINITION OF ZONES
 #define TINY_ZONE 1
@@ -36,6 +36,7 @@ typedef struct s_block
     size_t blockSize;
     void *next;
     bool used;
+    int mergedCount;
 } t_block;
 
 // ZONE STRUCTURE
@@ -67,6 +68,9 @@ void *realloc(void *ptr, size_t size);
 // REALLOCF FUNCTIONS
 void *reallocf(void *ptr, size_t size);
 
+// CALLOC FUNCTIONS
+void *calloc(size_t count, size_t size);
+
 // MALLOC FUNCTIONS
 void *malloc(size_t size);
 void *createExtraZone(size_t totalSize);
@@ -85,14 +89,11 @@ void show_alloc_mem_ex();
 // PRINT FUNCTIONS
 void min_printf(void *str, void *ptr, int nflag);
 
-// DEBUGG
-void debugger();
-
 // LIBFT FUNCTIONS
 void *ft_memcpy(void *dst, const void *src, size_t n);
 void ft_putchar(char c);
 void ft_putstr(char const *s);
 void ft_putendl(char const *s);
-void ft_putnbr(int n);
+void ft_putnbr(long n);
 size_t ft_strlen(const char *s);
 void ft_bzero(void *s, size_t n);

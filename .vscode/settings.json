@@ -3,6 +3,7 @@
         "malloc.h": "c",
         "time.h": "c",
         "resource.h": "c",
-        "libft.h": "c"
+        "libft.h": "c",
+        "mman.h": "c"
     }
 }
