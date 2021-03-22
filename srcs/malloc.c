@@ -77,6 +77,7 @@ void *malloc(size_t size)
     pthread_mutex_lock(&lock);
     nodeSize = sizeof(t_block);
     totalSize = size + nodeSize;
+    puts("I'M HERE 1111\n");
     if (!headZone)
     {
         createNewZone(TINY_ZONE_PAGES, TINY_ZONE);

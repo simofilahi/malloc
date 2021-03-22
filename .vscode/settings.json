@@ -4,6 +4,7 @@
         "time.h": "c",
         "resource.h": "c",
         "libft.h": "c",
-        "mman.h": "c"
+        "mman.h": "c",
+        "pthread.h": "c"
     }
 }

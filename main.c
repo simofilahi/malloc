@@ -1,10 +1,9 @@
-#include "includes/malloc.h"
 
-#include <stdint.h>
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "includes/malloc.h"
+// #include <stdint.h>
+// #include <pthread.h>
+// #include <stdio.h>
+// #include <string.h>
 
 // #include <stdlib.h>
 // #include <stdio.h>
@@ -54,28 +53,29 @@ char *fill(char *ptr, int asciiNum)
     return ptr;
 }
 
-void *func()
-{
-    char *ptr = NULL;
+// void *func()
+// {
+//     char *ptr = NULL;
 
-    // puts("I'M HERE\n");
-    ptr = (char *)malloc(sizeof(char) * 10);
-    // show_alloc_mem();
-    return NULL;
-}
+//     // puts("I'M HERE\n");
+//     ptr = (char *)malloc(sizeof(char) * 10);
+//     // show_alloc_mem();
+//     return NULL;
+// }
 
 int main()
 {
-
+    // puts("I'M HERE\n");
     int i;
     char *addr;
 
     i = 0;
     addr = NULL;
+    puts("HI\n");
     while (i < 1024)
     {
-        // addr = (char *)malloc(1024);
-        // addr[0] = 42;
+        addr = (char *)malloc(1024);
+        addr[0] = 42;
         i++;
     }
     return 0;

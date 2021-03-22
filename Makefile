@@ -42,7 +42,7 @@ all: $(HOST) $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(BoldGreen)LIBRARY CREATION$(ED)"
-	@$(CC) -shared -Wl -o $(NAME) $(OBJS)
+	@gcc -shared -o $(NAME) -I includes/. $(OBJS) $(PTHREAD_LIB)
 	@echo "$(BoldGreen)SYMBOLIC LINK CREATION$(ED)"
 	@ln -s $(NAME) $(SYMB)
 	@echo "$(BoldGreen)DONE$(ED)"
