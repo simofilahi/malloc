@@ -17,7 +17,7 @@ void addNewZoneToList(t_memZone *newZone)
 }
 
 // REQUEST FROM OS NEW MEMORY ZONE
-void *createNewZone(size_t pages, size_t type)
+t_memZone *createNewZone(size_t pages, size_t type)
 {
     size_t size;
     size_t zoneSize;
@@ -26,10 +26,10 @@ void *createNewZone(size_t pages, size_t type)
     zoneSize = sizeof(t_memZone);
     size = (size_t)getpagesize() * pages;
     newZone = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    min_printf("Zone @ before", newZone, 1);
-    newZone->startZone = (void *)newZone + (zoneSize + 8);
-    min_printf("newZone->startZone @ after", newZone->startZone, 1);
-    newZone->zoneSize = size - (zoneSize + 8);
+    // min_printf("Zone @ before", newZone, 1);
+    newZone->startZone = (void *)newZone + (zoneSize);
+    // min_printf("newZone->startZone @ after", newZone->startZone, 1);
+    newZone->zoneSize = size - (zoneSize);
     newZone->type = type;
     newZone->next = NULL;
     addNewZoneToList(newZone);

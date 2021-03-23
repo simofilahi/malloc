@@ -58,7 +58,7 @@ typedef struct s_memZone
 t_memZone *headZone;
 
 // MEMORY ZONES
-void *createNewZone(size_t pages, size_t type);
+t_memZone *createNewZone(size_t pages, size_t type);
 void addNewZoneToList(t_memZone *newZone);
 void *createLargeZone(size_t totalSize);
 
@@ -84,11 +84,11 @@ size_t align(size_t size);
 // MALLOC FUNCTIONS
 void *malloc(size_t size);
 void *createExtraZone(size_t totalSize);
-void *findFreeBlockInExtraZone(size_t totalSize);
-void *fillFirstBlock(t_memZone *zone, size_t totalSize);
-void *fillBlock(t_memZone *zone, size_t totalSize);
-void *createNewBlockInZone(t_memZone *zone, size_t totalSize);
-void *splitMergedBlocks(t_block *block, size_t totalSize);
+t_block *findFreeBlockInExtraZone(size_t totalSize);
+t_block *fillFirstBlock(t_memZone *zone, size_t totalSize);
+t_block *fillBlock(t_memZone *zone, size_t totalSize);
+t_block *createNewBlockInZone(t_memZone *zone, size_t totalSize);
+t_block *splitMergedBlocks(t_block *block, size_t totalSize);
 
 // ALLOCATION STATE VISUALISATION
 void show_alloc_mem();
