@@ -12,7 +12,8 @@ int freeBlock(t_memZone *zone, t_block *ptr)
     {
         if (currBlock == ptr && !(currBlock->used = 0))
         {
-            mergeBlock(prevBlock, currBlock);
+            // mergeBlock(prevBlock, currBlock);
+            // ft_putstr("free done successfully\n");
             return (SUCCESS);
         }
         prevBlock = currBlock;
@@ -36,6 +37,8 @@ void freeByExtraZone(t_memZone *zone, t_block *ptr)
 //  FREE BY PREALLOCATED ZONES
 void freeByZone(t_memZone *zone, t_block *ptr)
 {
+    // ft_putstr("ptr size \n");
+    // ft_putnbr(ptr->blockSize);
     if (!freeBlock(zone, ptr))
         return;
     freeByExtraZone(zone, ptr);
@@ -45,12 +48,13 @@ void freeByZone(t_memZone *zone, t_block *ptr)
 int deallocateZone(t_block *ptr, t_memZone *currZone, t_memZone *prevZone)
 {
     t_memZone *nextZone;
-
-    if (ptr == currZone->headBlock && currZone->type == LARGE_ZONE)
+    if (currZone && ptr == currZone->headBlock && currZone->type == LARGE_ZONE)
     {
+        // ft_putstr("large zone \n");
         nextZone = currZone->next;
-        if (!(munmap(currZone, currZone->zoneSize + sizeof(t_memZone))))
+        if (!(munmap(currZone, currZone->zoneSize + sizeof(t_memZone) + ptr->blockSize)))
         {
+            // ft_putstr("mnumap succes\n");
             prevZone->next = nextZone;
             return (SUCCESS);
         }
@@ -80,6 +84,33 @@ void freeByLargeZone(t_block *ptr)
     deallocateZone(ptr, currZone, prevZone);
 }
 
+void findBlock_debugger(t_block *ptr)
+{
+    t_memZone *currZone;
+    t_block *currBlock;
+    t_memZone *prevZone;
+
+    currZone = headZone;
+    currZone = headZone;
+    while (currZone)
+    {
+        currBlock = currZone->headBlock;
+        while (currBlock)
+        {
+            if (ptr == currBlock)
+            {
+                if (currZone->type == LARGE_ZONE)
+                    deallocateZone(ptr, currZone, prevZone);
+                else
+                    freeByZone(currZone, ptr);
+            }
+            currBlock = currBlock->next;
+        }
+        prevZone = currZone;
+        currZone = currZone->next;
+    }
+}
+
 //  FREE AN ALLOCATED MEMORY BLOCK
 void free(void *ptr)
 {
@@ -87,17 +118,27 @@ void free(void *ptr)
     t_memZone *smallZone;
     t_block *curr;
 
-    pthread_mutex_lock(&lock);
+    // ft_putstr("free\n");
+    min_printf("free incoming address ", ptr, 1);
+    // pthread_mutex_lock(&lock);
     if (!ptr)
         return;
     tinyZone = headZone;
     smallZone = headZone->next;
-    curr = (t_block *)ptr - 1;
-    if (curr->blockSize <= MAX_TINY_ZONE_SIZE)
-        freeByZone(tinyZone, curr);
-    else if (curr->blockSize <= MAX_SMALL_ZONE_SIZE)
-        freeByZone(smallZone, curr);
-    else
-        freeByLargeZone(curr);
-    pthread_mutex_unlock(&lock);
+    curr = (t_block *)ptr;
+    // min_printf("ptr @ ", ptr, 1);
+    curr -= 1;
+    // min_printf("curr @ ", curr, 1);
+    // printf("blockSize %lu\n", curr->blockSize);
+    // ft_putchar('\n');
+    // // ft_putnbr((long)curr->mergedCount);
+    // // ft_putchar('\n');
+    // if (curr && curr->blockSize > 0 && curr->blockSize <= MAX_TINY_ZONE_SIZE)
+    //     freeByZone(tinyZone, curr);
+    // else if (curr && curr->blockSize > 0 && curr->blockSize <= MAX_SMALL_ZONE_SIZE)
+    //     freeByZone(smallZone, curr);
+    // else if (curr && curr->blockSize > 0)
+    //     freeByLargeZone(curr);
+    findBlock_debugger(curr);
+    // / pthread_mutex_unlock(&lock);
 }

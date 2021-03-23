@@ -73,9 +73,14 @@ void *splitMergedBlocks(t_block *block, size_t totalSize)
 // CREATE NEW BLOCK IN A ZONE
 void *createNewBlockInZone(t_memZone *zone, size_t totalSize)
 {
-    if (!zone->headBlock)
-        return fillFirstBlock(zone, totalSize);
+    if (zone->zoneSize > (totalSize + 1))
+    {
+        if (!zone->headBlock)
+            return fillFirstBlock(zone, totalSize);
+        else
+            return fillBlock(zone, totalSize);
+    }
     else
-        return fillBlock(zone, totalSize);
+        return findFreeBlockInExtraZone(totalSize);
     return NULL;
 }
