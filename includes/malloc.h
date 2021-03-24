@@ -36,22 +36,21 @@ pthread_mutex_t lock;
 // BLOCK STRUCTURE
 typedef struct s_block
 {
-    struct s_block *next;
     size_t blockSize;
     size_t used;
     size_t mergedCount;
-
+    struct s_block *next;
 } t_block;
 
 // ZONE STRUCTURE
 typedef struct s_memZone
 {
     void *startZone;
-    struct s_memZone *next;
     size_t zoneSize;
     size_t type;
     t_block *headBlock;
     t_block *tailBlock;
+    struct s_memZone *next;
 } t_memZone;
 
 // FIRST ZONE GLOBAL VARIABLE

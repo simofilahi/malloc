@@ -14,6 +14,13 @@ int freeBlock(t_memZone *zone, t_block *ptr)
         {
             // mergeBlock(prevBlock, currBlock);
             // ft_putstr("free done successfully\n");
+            // ft_putstr("here is ptr  before ft_bzero ");
+            // ft_putstr((void *)ptr + 1);
+            // ft_putchar('\n');
+            // ft_bzero((void *)ptr + 1, currBlock->blockSize);
+            // ft_putstr("here is ptr  ");
+            // ft_putstr((void *)ptr + 1);
+            // ft_putchar('\n');
             return (SUCCESS);
         }
         prevBlock = currBlock;
@@ -116,18 +123,21 @@ void free(void *ptr)
 {
     t_memZone *tinyZone;
     t_memZone *smallZone;
-    t_block *curr;
+    // t_block *curr;
 
     // ft_putstr("free\n");
-    min_printf("free incoming address ", ptr, 1);
+    // min_printf("free incoming address ", ptr, 1);
+    // ft_putstr("here is ptr in the begin ");
+    // ft_putstr(ptr);
+    // ft_putchar('\n');
     // pthread_mutex_lock(&lock);
     if (!ptr)
         return;
     tinyZone = headZone;
     smallZone = headZone->next;
-    curr = (t_block *)ptr;
+    ptr = (t_block *)ptr;
     // min_printf("ptr @ ", ptr, 1);
-    curr -= 1;
+    ptr -= 1;
     // min_printf("curr @ ", curr, 1);
     // printf("blockSize %lu\n", curr->blockSize);
     // ft_putchar('\n');
@@ -139,6 +149,6 @@ void free(void *ptr)
     //     freeByZone(smallZone, curr);
     // else if (curr && curr->blockSize > 0)
     //     freeByLargeZone(curr);
-    findBlock_debugger(curr);
+    findBlock_debugger(ptr);
     // / pthread_mutex_unlock(&lock);
 }

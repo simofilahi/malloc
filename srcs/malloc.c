@@ -8,12 +8,15 @@
 // FILL THE FIRST ALLOCATION BLOCK IN A ZONE
 t_block *fillFirstBlock(t_memZone *zone, size_t totalSize)
 {
-    zone->headBlock = zone->startZone;
-    zone->zoneSize -= (totalSize);
+
+    min_printf("zone @", zone, 1);
+    zone->headBlock = (t_block *)(((unsigned char *)zone) + sizeof(t_memZone) + 8);
+    min_printf("zone->headBlock @", zone->headBlock, 1);
+    zone->zoneSize -= totalSize + 8;
     // ft_putstr("zone->zoneSize ");
     // ft_putnbr(zone->zoneSize % 8);
     // ft_putchar('\n');
-    zone->startZone += (totalSize);
+    // zone->startZone += totalSize + 8;
     zone->headBlock->blockSize = totalSize;
     zone->headBlock->used = 1;
     zone->headBlock->mergedCount = 0;
@@ -27,12 +30,14 @@ t_block *fillBlock(t_memZone *zone, size_t totalSize)
 {
     t_block *block;
 
-    block = zone->startZone;
-    zone->zoneSize -= (totalSize);
+    min_printf("zone @", zone, 1);
+    block = (t_block *)(((unsigned char *)zone->tailBlock) + (zone->tailBlock->blockSize + 8));
+    min_printf("zone->headBlock @", zone->headBlock, 1);
+    zone->zoneSize -= totalSize + 8;
     // ft_putstr("zone->zoneSize ");
     // ft_putnbr(zone->zoneSize % 8);
     // ft_putchar('\n');
-    zone->startZone += (totalSize);
+    // zone->startZone += totalSize + 8;
     block->blockSize = totalSize;
     block->used = 1;
     block->mergedCount = 0;
@@ -87,7 +92,6 @@ void *malloc(size_t size)
     size_t nodeSize;
     size_t totalSize;
 
-    // ft_putstr("malloc\n");
     // ft_putstr("size ==> ");
     // ft_putnbr((long)size);
     // ft_putchar('\n');
@@ -98,7 +102,7 @@ void *malloc(size_t size)
     // ft_putstr("totalSize 1");
     // ft_putnbr(totalSize);
     // ft_putchar('\n');
-    // totalSize = align(totalSize);
+    totalSize = align(totalSize);
     // ft_putstr("totalSize % ");
     // ft_putnbr(totalSize % 8);
     // ft_putchar('\n');
@@ -109,13 +113,15 @@ void *malloc(size_t size)
     }
     if (size == 0)
         return NULL;
+    // ft_putendl("hello");
     if (!(block = requestBlock(totalSize)))
         return NULL;
     // show_alloc_mem_ex();
+    // ft_putendl("hello");
     // pthread_mutex_unlock(&lock);
     // ft_putnbr((((t_block *)block) + 1) - (void *)block);
-    block = ((t_block *)block) + 1;
+    // block = ((t_block *)block) + 1;
     // printf("block @ %p\n", block);'
     min_printf("malloc returned address ", block, 1);
-    return (void *)(block);
+    return (void *)(((unsigned char *)(block)) + sizeof(t_block));
 }

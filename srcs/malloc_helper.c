@@ -73,7 +73,7 @@ t_block *splitMergedBlocks(t_block *block, size_t totalSize)
 // CREATE NEW BLOCK IN A ZONE
 t_block *createNewBlockInZone(t_memZone *zone, size_t totalSize)
 {
-    if (zone->zoneSize > (totalSize + 1))
+    if (zone->zoneSize > totalSize)
     {
         if (!zone->headBlock)
             return fillFirstBlock(zone, totalSize);
