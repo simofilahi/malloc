@@ -1,35 +1,51 @@
 #include "../includes/malloc.h"
 
+// LOOK FOR A BLOCK IF EXIST IN A ZONE
+static t_block *findBlock(t_block *ptr)
+{
+    t_memZone *currZone;
+    t_block *currBlock;
+
+    currZone = headZone;
+    while (currZone)
+    {
+        currBlock = currZone->headBlock;
+        while (currBlock)
+        {
+            if (ptr == currBlock)
+            {
+                return currBlock;
+            }
+
+            currBlock = currBlock->next;
+        }
+        currZone = currZone->next;
+    }
+    return NULL;
+}
+
+// REALLOC AN ALLOCATION
 void *realloc(void *ptr, size_t size)
 {
     void *block;
-    min_printf("realloc incoming address ", ptr, 1);
-    block = malloc(size);
-    if (!block)
-        return ptr;
-    else
-    {
-        if (ptr)
-        {
-            t_block *p;
-            size_t len;
+    t_block *targetedBlock;
+    size_t len;
 
-            p = (t_block *)ptr - 1;
-            if (p->blockSize > size)
-                len = size;
-            else 
-                len = p->blockSize;
-            ft_putstr("len  ");
-            ft_putnbr(p->blockSize);
-            ft_memcpy(block, ptr, len);
-            ft_putstr("block : ");
-            ft_putstr(block);
-            ft_putchar('\n');
-            free(ptr);
-            // free(block);
-        }
+    pthread_mutex_lock(&lock);
+    block = NULL;
+    if (!ptr)
+        return malloc(size);
+    if ((targetedBlock = findBlock((t_block *)ptr - 1)))
+    {
+        if (targetedBlock->blockSize > size)
+            len = size;
+        else
+            len = targetedBlock->blockSize;
+        if (!(block = (malloc(size))))
+            return block;
+        ft_memcpy(block, ptr, len);
+        free(ptr);
     }
-    // pthread_mutex_unlock(&lock);
-    min_printf("realloc returned address ", block, 1);
-    return block;
+    pthread_mutex_unlock(&lock);
+    return (block);
 }

@@ -1,5 +1,4 @@
-int main()
-{
- //malloc(500);
+int main(){
+	malloc(500);
 	return 0;
 }

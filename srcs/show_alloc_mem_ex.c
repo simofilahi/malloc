@@ -16,15 +16,34 @@ static void print_zones_name(t_memZone *currMemZone)
     ft_putendl(" bytes ");
 }
 
+// CALCULATE BLOCK SIZE
+void calculateBlockSize(t_block *curr, size_t *blockSize)
+{
+    size_t blockSizeCount;
+
+    blockSizeCount = (sizeof(t_block) * (curr->mergedCount + 1));
+    if (!curr->mergedCount)
+    {
+        if (blockSizeCount > curr->blockSize)
+            *blockSize = 0;
+        else
+            *blockSize = curr->blockSize - sizeof(t_block);
+    }
+    else
+    {
+        if (blockSizeCount > curr->blockSize)
+            *blockSize = 0;
+        else
+            *blockSize = curr->blockSize - (sizeof(t_block) * (curr->mergedCount + 1));
+    }
+}
+
 // PRINT BLOCK INFORMATION
 static void print_blocks_infos(t_block *curr, size_t *totalSize)
 {
     size_t blockSize;
 
-    if (!curr->mergedCount)
-        blockSize = curr->blockSize - sizeof(t_block);
-    else
-        blockSize = curr->blockSize - (sizeof(t_block) * (curr->mergedCount + 1));
+    calculateBlockSize(curr, &blockSize);
     min_printf("   -> BLOCK          : ", curr + 1, 0);
     min_printf(" - ", (((void *)(curr + 1)) + blockSize), 1);
     ft_putstr("     - USED          : ");

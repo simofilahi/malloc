@@ -25,7 +25,7 @@ void *getEmptyExtraZone(size_t totalSize)
 }
 
 // LOOK IN EXTRA ZONE IF THERE IS A FREE BLOCK
-t_block *findFreeBlockInExtraZone(size_t totalSize)
+void *findFreeBlockInExtraZone(size_t totalSize)
 {
     t_block *currBlock;
     t_memZone *currZone;
@@ -49,12 +49,12 @@ t_block *findFreeBlockInExtraZone(size_t totalSize)
 }
 
 // // SPLIT MERGED BLOCKS
-t_block *splitMergedBlocks(t_block *block, size_t totalSize)
+void *splitMergedBlocks(t_block *block, size_t totalSize)
 {
     t_block *newBlock;
 
     newBlock = NULL;
-    if (block->blockSize > totalSize)
+    if (block->blockSize > totalSize && (block->blockSize - totalSize))
     {
         newBlock = block + (block->blockSize - totalSize);
         newBlock->blockSize = block->blockSize - totalSize;
@@ -70,8 +70,11 @@ t_block *splitMergedBlocks(t_block *block, size_t totalSize)
     return block;
 }
 
+// [[150]]
+
 // CREATE NEW BLOCK IN A ZONE
-t_block *createNewBlockInZone(t_memZone *zone, size_t totalSize)
+void *
+createNewBlockInZone(t_memZone *zone, size_t totalSize)
 {
     if (zone->zoneSize > totalSize)
     {

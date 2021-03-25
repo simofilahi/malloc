@@ -23,10 +23,7 @@ void print_blocks_infos(t_block *curr, size_t *totalSize)
     {
         if (curr->used)
         {
-            if (!curr->mergedCount)
-                blockSize = curr->blockSize - sizeof(t_block);
-            else
-                blockSize = curr->blockSize - (sizeof(t_block) * (curr->mergedCount + 1));
+            calculateBlockSize(curr, &blockSize);
             min_printf("", curr + 1, 0);
             min_printf(" - ", (((void *)(curr + 1)) + blockSize), 0);
             ft_putstr(" : ");

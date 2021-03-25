@@ -1,10 +1,8 @@
-
-NAME = libft_malloc_$(HOSTTYPE).so
-
-HOST = 
 ifeq ($(HOSTTYPE),)
 HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
+
+NAME = libft_malloc_$(HOSTTYPE).so
 
 SYMB = libft_malloc.so
 
@@ -12,17 +10,12 @@ CC = gcc
 CFLAG = -Wextra -Werror -Wall
 SRCS = srcs/free.c\
  	  srcs/realloc.c\
-	  srcs/reallocf.c\
-	  srcs/align.c\
-	  srcs/valloc.c\
 	  srcs/malloc.c\
 	  srcs/calloc.c\
 	  srcs/show_alloc_mem.c\
 	  srcs/show_alloc_mem_ex.c\
 	  srcs/malloc_helper.c\
 	  srcs/free_helper.c\
-	  srcs/mem_zone.c\
-	  srcs/mini_printf.c\
 	  srcs/libft_func/ft_memcpy.c\
 	  srcs/libft_func/ft_putchar.c\
 	  srcs/libft_func/ft_putendl.c\
@@ -30,6 +23,8 @@ SRCS = srcs/free.c\
 	  srcs/libft_func/ft_putstr.c\
 	  srcs/libft_func/ft_putnbr.c\
 	  srcs/libft_func/ft_bzero.c\
+	  srcs/mem_zone.c\
+	  srcs/mini_printf.c\
 
 BoldRed = \033[1;31m
 BoldGreen = \033[1;32m
@@ -43,14 +38,14 @@ all: $(HOST) $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(BoldGreen)LIBRARY CREATION$(ED)"
-	@gcc -shared -o $(NAME) $(OBJS)
+	@$(CC) -shared -Wl -o $(NAME) $(OBJS)
 	@echo "$(BoldGreen)SYMBOLIC LINK CREATION$(ED)"
 	@ln -fs $(NAME) $(SYMB)
 	@echo "$(BoldGreen)DONE$(ED)"
 
 %.o: %.c
 	@echo "$(BoldBlue)COMPILING SRCS...$(ED)"
-	@$(CC) $(CFLAG) -fPIC -I includes -c $< -o $@
+	@$(CC) $(CFLAG) -fPIC -c $< -o $@
 	
 clean:
 	@echo "$(BoldYellow) REMOVE OBJECTS"
@@ -59,7 +54,7 @@ clean:
 fclean: clean
 	@echo "$(BoldYellow) REMOVE LIBRARY AND SYMBOLIC LINK"
 	@rm -rf $(NAME) $(SYMB)
-	
+
 re: fclean all
 
 help:
