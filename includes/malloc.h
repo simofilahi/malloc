@@ -1,22 +1,17 @@
-#include <stdlib.h>
 #include <unistd.h>
-#include <stdbool.h>
 #include <sys/mman.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <pthread.h>
 
-// REMOVE THIS LATER
-#include <stdio.h>
-
 // MAX SIZE OF AN ALLOCATION IN A ZONE
 #define MAX_TINY_ZONE_SIZE 255
-#define MAX_SMALL_ZONE_SIZE 2000
+#define MAX_SMALL_ZONE_SIZE 4092
 
 // MMAP PAGES
 #define TINY_ZONE_PAGES 10
-#define SAMLL_ZONE_PAGES 100
-#define EXTRA_ZONE_PAGES 100
+#define SAMLL_ZONE_PAGES 150
+#define EXTRA_ZONE_PAGES 150
 
 // DEFINITION OF ZONES
 #define TINY_ZONE 1
@@ -27,27 +22,30 @@
 #define SUCCESS 0
 #define FAILED 1
 
+#define TRUE 1
+#define FALSE 0
+
 // THREAD SAFE GLOBAL VARIABLE
 pthread_mutex_t lock;
 
 // BLOCK STRUCTURE
 typedef struct s_block
 {
-    size_t blockSize;
-    struct s_block *next;
-    int used;
-    int mergedCount;
+	size_t blockSize;
+	struct s_block *next;
+	int used;
+	int mergedCount;
 } t_block;
 
 // ZONE STRUCTURE
 typedef struct s_memZone
 {
-    void *startZone;
-    struct s_memZone *next;
-    size_t zoneSize;
-    size_t type;
-    t_block *headBlock;
-    t_block *tailBlock;
+	void *startZone;
+	struct s_memZone *next;
+	size_t zoneSize;
+	size_t type;
+	t_block *headBlock;
+	t_block *tailBlock;
 } t_memZone;
 
 // FIRST ZONE
@@ -79,9 +77,8 @@ void *fillFirstBlock(t_memZone *zone, size_t totalSize);
 void *fillBlock(t_memZone *zone, size_t totalSize);
 void *createNewBlockInZone(t_memZone *zone, size_t totalSize);
 void *splitMergedBlocks(t_block *block, size_t totalSize);
-void *createNewBlockInZone(t_memZone *zone, size_t totalSize);
 
-// ALLOCATION VISUALISATION
+// VISUALISATION
 void show_alloc_mem();
 void show_alloc_mem_ex();
 

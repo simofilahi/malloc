@@ -13,10 +13,7 @@ static t_block *findBlock(t_block *ptr)
         while (currBlock)
         {
             if (ptr == currBlock)
-            {
                 return currBlock;
-            }
-
             currBlock = currBlock->next;
         }
         currZone = currZone->next;
@@ -24,14 +21,13 @@ static t_block *findBlock(t_block *ptr)
     return NULL;
 }
 
-// REALLOC AN ALLOCATION
-void *realloc(void *ptr, size_t size)
+// REALLOC HELPER
+void *realloc_helper(void *ptr, size_t size)
 {
     void *block;
     t_block *targetedBlock;
     size_t len;
 
-    pthread_mutex_lock(&lock);
     block = NULL;
     if (!ptr)
         return malloc(size);
@@ -46,6 +42,16 @@ void *realloc(void *ptr, size_t size)
         ft_memcpy(block, ptr, len);
         free(ptr);
     }
+    return block;
+}
+
+// REALLOC AN ALLOCATION
+void *realloc(void *ptr, size_t size)
+{
+    void *block;
+
+    pthread_mutex_lock(&lock);
+    block = realloc_helper(ptr, size);
     pthread_mutex_unlock(&lock);
     return (block);
 }

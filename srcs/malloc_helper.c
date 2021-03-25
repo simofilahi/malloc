@@ -38,7 +38,7 @@ void *findFreeBlockInExtraZone(size_t totalSize)
             currBlock = currZone->headBlock;
             while (currBlock)
             {
-                if (!currBlock->used && currBlock->blockSize >= totalSize && (currBlock->used = 1))
+                if (!currBlock->used && currBlock->blockSize >= totalSize && (currBlock->used = TRUE))
                     return currBlock;
                 currBlock = currBlock->next;
             }
@@ -58,19 +58,17 @@ void *splitMergedBlocks(t_block *block, size_t totalSize)
     {
         newBlock = block + (block->blockSize - totalSize);
         newBlock->blockSize = block->blockSize - totalSize;
-        newBlock->used = 0;
+        newBlock->used = FALSE;
         if (block->mergedCount > 0)
             newBlock->mergedCount = block->mergedCount - 1;
         newBlock->next = block->next;
         block->mergedCount = 0;
         block->blockSize = totalSize;
-        block->used = 1;
+        block->used = TRUE;
         block->next = newBlock;
     }
     return block;
 }
-
-// [[150]]
 
 // CREATE NEW BLOCK IN A ZONE
 void *
