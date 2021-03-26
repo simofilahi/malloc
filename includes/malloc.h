@@ -1,98 +1,160 @@
-#include <unistd.h>
-#include <sys/mman.h>
-#include <sys/time.h>
-#include <sys/resource.h>
-#include <pthread.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   malloc.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/03/25 17:42:27 by mfilahi           #+#    #+#             */
+/*   Updated: 2021/03/25 18:07:47 by mfilahi          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// MAX SIZE OF AN ALLOCATION IN A ZONE
-#define MAX_TINY_ZONE_SIZE 255
-#define MAX_SMALL_ZONE_SIZE 4092
+#ifndef MALLOC_H
+# define MALLOC_H
+# include <unistd.h>
+# include <sys/mman.h>
+# include <sys/time.h>
+# include <sys/resource.h>
+# include <pthread.h>
 
-// MMAP PAGES
-#define TINY_ZONE_PAGES 10
-#define SAMLL_ZONE_PAGES 150
-#define EXTRA_ZONE_PAGES 150
+/*
+ ** -MAX SIZE OF AN ALLOCATION IN A ZONE
+*/
 
-// DEFINITION OF ZONES
-#define TINY_ZONE 1
-#define SMALL_ZONE 2
-#define LARGE_ZONE 3
-#define EXTRA_ZONE 4
+# define MAX_TINY_ZONE_SIZE 255
+# define MAX_SMALL_ZONE_SIZE 4092
 
-#define SUCCESS 0
-#define FAILED 1
+/*
+ ** - MMAP PAGES
+*/
 
-#define TRUE 1
-#define FALSE 0
+# define TINY_ZONE_PAGES 10
+# define SAMLL_ZONE_PAGES 150
+# define EXTRA_ZONE_PAGES 150
 
-// THREAD SAFE GLOBAL VARIABLE
-pthread_mutex_t lock;
+/*
+ ** DEFINITION OF ZONES
+*/
 
-// BLOCK STRUCTURE
-typedef struct s_block
+# define TINY_ZONE 1
+# define SMALL_ZONE 2
+# define LARGE_ZONE 3
+# define EXTRA_ZONE 4
+
+# define SUCCESS 0
+# define FAILED 1
+
+# define TRUE 1
+# define FALSE 0
+
+/*
+ ** - THREAD SAFE GLOBAL VARIABLE
+*/
+
+pthread_mutex_t	g_lock;
+
+/*
+ ** - BLOCK STRUCTURE
+*/
+typedef struct	s_block
 {
-	size_t blockSize;
-	struct s_block *next;
-	int used;
-	int mergedCount;
-} t_block;
+	size_t		block_size;
+	struct		s_block *next;
+	int			used;
+	int			merged_count;
+}				t_block;
 
-// ZONE STRUCTURE
-typedef struct s_memZone
+/*
+ ** - ZONE STRUCTURE
+*/
+
+typedef	struct	s_mem_zone
 {
-	void *startZone;
-	struct s_memZone *next;
-	size_t zoneSize;
-	size_t type;
-	t_block *headBlock;
-	t_block *tailBlock;
-} t_memZone;
+	void		*start_zone;
+	struct		s_mem_zone *next;
+	size_t		zone_size;
+	size_t		type;
+	t_block		*head_block;
+	t_block		*tail_block;
+}				t_mem_zone;
 
-// FIRST ZONE
-t_memZone *headZone;
+/*
+ ** FIRST ZONE
+*/
 
-// MEMORY ZONES
-void *createNewZone(size_t pages, size_t type);
-void addNewZoneToList(t_memZone *newZone);
-void *createLargeZone(size_t totalSize);
-void *createExtraZone(size_t totalSize);
+t_mem_zone		*g_head_zone;
 
-// FREE FUNCTIONS;
-void free(void *ptr);
-void mergeBlock(t_block *prevBlock, t_block *currBlock);
+/*
+ ** MEMORY ZONES
+*/
 
-// REALLOC FUNCTIONS
-void *realloc(void *ptr, size_t size);
+void			*create_new_zone(size_t pages, size_t type);
+void			add_new_zone_to_list(t_mem_zone *new_zone);
+void			*create_large_zone(size_t total_size);
+void			*create_extra_zone(size_t total_size);
 
-// REALLOCF FUNCTIONS
-void *reallocf(void *ptr, size_t size);
+/*
+ ** - FREE FUNCTIONS
+*/
 
-// CALLOC FUNCTIONS
-void *calloc(size_t count, size_t size);
+void			free(void *ptr);
+void			merge_block(t_block *prev_block, t_block *curr_block);
 
-// MALLOC FUNCTIONS
-void *malloc(size_t size);
-void *findFreeBlockInExtraZone(size_t totalSize);
-void *fillFirstBlock(t_memZone *zone, size_t totalSize);
-void *fillBlock(t_memZone *zone, size_t totalSize);
-void *createNewBlockInZone(t_memZone *zone, size_t totalSize);
-void *splitMergedBlocks(t_block *block, size_t totalSize);
+/*
+ ** - REALLOC FUNCTIONS
+*/
 
-// VISUALISATION
-void show_alloc_mem();
-void show_alloc_mem_ex();
+void			*realloc(void *ptr, size_t size);
 
-// PRINT FUNCTIONS
-void min_printf(void *str, void *ptr, int nflag);
+/*
+ ** - REALLOCF FUNCTIONS
+*/
 
-// UTILIS
-void calculateBlockSize(t_block *curr, size_t *blockSize);
+void			*reallocf(void *ptr, size_t size);
 
-// LIBFT FUNCTIONS
-void *ft_memcpy(void *dst, const void *src, size_t n);
-void ft_putchar(char c);
-void ft_putstr(char const *s);
-void ft_putendl(char const *s);
-void ft_putnbr(long n);
-size_t ft_strlen(const char *s);
-void ft_bzero(void *s, size_t n);
+/*
+ ** CALLOC FUNCTIONS
+*/
+void			*calloc(size_t count, size_t size);
+
+/*
+ ** - MALLOC FUNCTIONS
+*/
+
+void			*malloc(size_t size);
+void			*find_free_block_in_extra_zone(size_t total_size);
+void			*fill_first_block(t_mem_zone *zone, size_t total_size);
+void			*fill_block(t_mem_zone *zone, size_t total_size);
+void			*create_new_block_in_zone(t_mem_zone *zone, size_t total_size);
+void			*split_merged_blocks(t_block *block, size_t total_size);
+
+/*
+ ** - VISUALISATION
+*/
+
+void			show_alloc_mem(void);
+void			show_alloc_mem_ex(void);
+
+/*
+ ** - PRINT FUNCTIONS
+*/
+void			min_printf(void *str, void *ptr, int nflag);
+
+/*
+ ** - UTILIS
+*/
+
+void			calculateblock_size(t_block *curr, size_t *block_size);
+
+/*
+ ** - LIBFT FUNCTIONS
+*/
+void			*ft_memcpy(void *dst, const void *src, size_t n);
+void			ft_putchar(char c);
+void			ft_putstr(char const *s);
+void			ft_putendl(char const *s);
+void			ft_putnbr(long n);
+size_t			ft_strlen(const char *s);
+void			ft_bzero(void *s, size_t n);
+#endif

@@ -6,13 +6,13 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/20 09:45:25 by mfilahi           #+#    #+#             */
-/*   Updated: 2018/10/20 09:47:32 by mfilahi          ###   ########.fr       */
+/*   Updated: 2021/03/25 11:17:49 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/malloc.h"
 
-void ft_putendl(char const *s)
+void	ft_putendl(char const *s)
 {
 	while (*s)
 		ft_putchar(*s++);

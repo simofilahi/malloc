@@ -6,13 +6,13 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/20 09:47:46 by mfilahi           #+#    #+#             */
-/*   Updated: 2018/10/20 10:02:30 by mfilahi          ###   ########.fr       */
+/*   Updated: 2021/03/25 11:18:05 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/malloc.h"
 
-void ft_putnbr(long n)
+void	ft_putnbr(long n)
 {
 	unsigned long nbr;
 

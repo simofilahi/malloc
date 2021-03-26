@@ -26,6 +26,7 @@ SRCS = srcs/free.c\
 	  srcs/mem_zone.c\
 	  srcs/mini_printf.c\
 
+
 BoldRed = \033[1;31m
 BoldGreen = \033[1;32m
 BoldBlue = \033[1;34m
@@ -38,7 +39,7 @@ all: $(HOST) $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(BoldGreen)LIBRARY CREATION$(ED)"
-	@$(CC) -shared -Wl -o $(NAME) $(OBJS)
+	@$(CC) -shared -o $(NAME) $(OBJS)
 	@echo "$(BoldGreen)SYMBOLIC LINK CREATION$(ED)"
 	@ln -fs $(NAME) $(SYMB)
 	@echo "$(BoldGreen)DONE$(ED)"

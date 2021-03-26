@@ -1,57 +1,79 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   realloc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/03/25 11:01:09 by mfilahi           #+#    #+#             */
+/*   Updated: 2021/03/25 18:10:38 by mfilahi          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/malloc.h"
 
-// LOOK FOR A BLOCK IF EXIST IN A ZONE
-static t_block *findBlock(t_block *ptr)
-{
-    t_memZone *currZone;
-    t_block *currBlock;
+/*
+ ** - LOOK FOR A BLOCK IF EXIST IN A ZONE
+*/
 
-    currZone = headZone;
-    while (currZone)
-    {
-        currBlock = currZone->headBlock;
-        while (currBlock)
-        {
-            if (ptr == currBlock)
-                return currBlock;
-            currBlock = currBlock->next;
-        }
-        currZone = currZone->next;
-    }
-    return NULL;
+static t_block	*find_block(t_block *ptr)
+{
+	t_mem_zone	*curr_zone;
+	t_block		*curr_block;
+
+	curr_zone = g_head_zone;
+	while (curr_zone)
+	{
+		curr_block = curr_zone->head_block;
+		while (curr_block)
+		{
+			if (ptr == curr_block)
+				return (curr_block);
+			curr_block = curr_block->next;
+		}
+		curr_zone = curr_zone->next;
+	}
+	return (NULL);
 }
 
-// REALLOC HELPER
-void *realloc_helper(void *ptr, size_t size)
-{
-    void *block;
-    t_block *targetedBlock;
-    size_t len;
+/*
+ ** - REALLOC HELPER
+*/
 
-    block = NULL;
-    if (!ptr)
-        return malloc(size);
-    if ((targetedBlock = findBlock((t_block *)ptr - 1)))
-    {
-        if (targetedBlock->blockSize > size)
-            len = size;
-        else
-            len = targetedBlock->blockSize;
-        if (!(block = (malloc(size))))
-            return block;
-        ft_memcpy(block, ptr, len);
-        free(ptr);
-    }
-    return block;
+void			*realloc_helper(void *ptr, size_t size)
+{
+	void	*block;
+	t_block	*targeted_block;
+	size_t	len;
+
+	block = NULL;
+	if (!ptr)
+		return (malloc(size));
+	if ((targeted_block = find_block((t_block *)ptr - 1)))
+	{
+		len = 0;
+		if (targeted_block->block_size > size)
+			len = size;
+		else
+			len = targeted_block->block_size;
+		if (!(block = (malloc(size))))
+			return (block);
+		ft_memcpy(block, ptr, len);
+		free(ptr);
+	}
+	return (block);
 }
 
-// REALLOC AN ALLOCATION
-void *realloc(void *ptr, size_t size)
-{
-    void *block;
+/*
+ ** - REALLOC AN ALLOCATION
+*/
 
-    pthread_mutex_lock(&lock);
-    block = realloc_helper(ptr, size);
-    pthread_mutex_unlock(&lock);
-    return (block);
+void			*realloc(void *ptr, size_t size)
+{
+	void	*block;
+
+	pthread_mutex_lock(&g_lock);
+	block = realloc_helper(ptr, size);
+	pthread_mutex_unlock(&g_lock);
+	return (block);
 }
