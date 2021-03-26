@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 17:42:27 by mfilahi           #+#    #+#             */
-/*   Updated: 2021/03/25 18:07:47 by mfilahi          ###   ########.fr       */
+/*   Updated: 2021/03/26 13:58:40 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,109 +52,109 @@
  ** - THREAD SAFE GLOBAL VARIABLE
 */
 
-pthread_mutex_t	g_lock;
+pthread_mutex_t			g_lock;
 
 /*
  ** - BLOCK STRUCTURE
 */
-typedef struct	s_block
+typedef struct			s_block
 {
-	size_t		block_size;
-	struct		s_block *next;
-	int			used;
-	int			merged_count;
-}				t_block;
+	size_t				block_size;
+	struct s_block		*next;
+	int					used;
+	int					merged_count;
+}						t_block;
 
 /*
  ** - ZONE STRUCTURE
 */
 
-typedef	struct	s_mem_zone
+typedef struct			s_mem_zone
 {
-	void		*start_zone;
-	struct		s_mem_zone *next;
-	size_t		zone_size;
-	size_t		type;
-	t_block		*head_block;
-	t_block		*tail_block;
-}				t_mem_zone;
+	void				*start_zone;
+	struct s_mem_zone	*next;
+	size_t				zone_size;
+	size_t				type;
+	t_block				*head_block;
+	t_block				*tail_block;
+}						t_mem_zone;
 
 /*
  ** FIRST ZONE
 */
 
-t_mem_zone		*g_head_zone;
+t_mem_zone				*g_head_zone;
 
 /*
  ** MEMORY ZONES
 */
 
-void			*create_new_zone(size_t pages, size_t type);
-void			add_new_zone_to_list(t_mem_zone *new_zone);
-void			*create_large_zone(size_t total_size);
-void			*create_extra_zone(size_t total_size);
+void					*create_new_zone(size_t pages, size_t type);
+void					add_new_zone_to_list(t_mem_zone *new_zone);
+void					*create_large_zone(size_t total_size);
+void					*create_extra_zone(size_t total_size);
 
 /*
  ** - FREE FUNCTIONS
 */
 
-void			free(void *ptr);
-void			merge_block(t_block *prev_block, t_block *curr_block);
+void					free(void *ptr);
+void					merge_block(t_block *prev_block, t_block *curr_block);
 
 /*
  ** - REALLOC FUNCTIONS
 */
 
-void			*realloc(void *ptr, size_t size);
+void					*realloc(void *ptr, size_t size);
 
 /*
  ** - REALLOCF FUNCTIONS
 */
 
-void			*reallocf(void *ptr, size_t size);
+void					*reallocf(void *ptr, size_t size);
 
 /*
  ** CALLOC FUNCTIONS
 */
-void			*calloc(size_t count, size_t size);
+void					*calloc(size_t count, size_t size);
 
 /*
  ** - MALLOC FUNCTIONS
 */
 
-void			*malloc(size_t size);
-void			*find_free_block_in_extra_zone(size_t total_size);
-void			*fill_first_block(t_mem_zone *zone, size_t total_size);
-void			*fill_block(t_mem_zone *zone, size_t total_size);
-void			*create_new_block_in_zone(t_mem_zone *zone, size_t total_size);
-void			*split_merged_blocks(t_block *block, size_t total_size);
+void					*malloc(size_t size);
+void					*find_free_block_in_extra_zone(size_t total_size);
+void					*fill_first_block(t_mem_zone *zone, size_t total_size);
+void					*fill_block(t_mem_zone *zone, size_t total_size);
+void					*create_new_block_in_zone(t_mem_zone *zone,\
+		size_t total_size);
 
 /*
  ** - VISUALISATION
 */
 
-void			show_alloc_mem(void);
-void			show_alloc_mem_ex(void);
+void					show_alloc_mem(void);
+void					show_alloc_mem_ex(void);
 
 /*
  ** - PRINT FUNCTIONS
 */
-void			min_printf(void *str, void *ptr, int nflag);
+void					min_printf(void *str, void *ptr, int nflag);
 
 /*
  ** - UTILIS
 */
 
-void			calculateblock_size(t_block *curr, size_t *block_size);
+void					calculateblock_size(t_block *curr, size_t *block_size);
 
 /*
  ** - LIBFT FUNCTIONS
 */
-void			*ft_memcpy(void *dst, const void *src, size_t n);
-void			ft_putchar(char c);
-void			ft_putstr(char const *s);
-void			ft_putendl(char const *s);
-void			ft_putnbr(long n);
-size_t			ft_strlen(const char *s);
-void			ft_bzero(void *s, size_t n);
+void					*ft_memcpy(void *dst, const void *src, size_t n);
+void					ft_putchar(char c);
+void					ft_putstr(char const *s);
+void					ft_putendl(char const *s);
+void					ft_putnbr(long n);
+size_t					ft_strlen(const char *s);
+void					ft_bzero(void *s, size_t n);
 #endif

@@ -26,7 +26,6 @@ SRCS = srcs/free.c\
 	  srcs/mem_zone.c\
 	  srcs/mini_printf.c\
 
-
 BoldRed = \033[1;31m
 BoldGreen = \033[1;32m
 BoldBlue = \033[1;34m

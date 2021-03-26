@@ -83,14 +83,20 @@ int main()
     // printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n");
     // printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
 
+    // char *ptr;
+
+    // ptr = NULL;
+    // ptr = malloc(1024);
+    // show_alloc_mem_ex();
+    // free(ptr);
+    // show_alloc_mem_ex();
     pthread_t thread_id[3];
 
-    // i = 0;
-    // while (i < 100)
-    // {
-    malloc(500);
-    pthread_mutex_init(&g_lock, NULL);
-    setenv("g_lock=", (char *)((void *)g_lock));
+    // // i = 0;
+    // // while (i < 100)
+    // // {
+    // malloc(500);
+
     pthread_create(&thread_id[0], NULL, func, NULL);
     pthread_create(&thread_id[1], NULL, func, NULL);
     pthread_create(&thread_id[2], NULL, func, NULL);

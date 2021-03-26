@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 10:05:11 by mfilahi           #+#    #+#             */
-/*   Updated: 2021/03/25 18:22:18 by mfilahi          ###   ########.fr       */
+/*   Updated: 2021/03/26 14:33:25 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ void	*find_free_block_in_zone(t_mem_zone *zone, size_t total_size)
 		if (!curr_block->used &&
 			curr_block->block_size >= total_size &&
 			(curr_block->used = TRUE))
-			return (split_merged_blocks(curr_block, total_size));
+		{
+			return (curr_block);
+		}
 		curr_block = curr_block->next;
 	}
 	return (create_new_block_in_zone(zone, total_size));

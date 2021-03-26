@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 09:58:02 by mfilahi           #+#    #+#             */
-/*   Updated: 2021/03/26 09:17:32 by mfilahi          ###   ########.fr       */
+/*   Updated: 2021/03/26 14:26:28 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,7 @@ int		free_block(t_mem_zone *curr_zone, t_mem_zone *prev_zone, t_block *ptr)
 			if (curr_zone->type == LARGE_ZONE)
 				drop_zone(ptr, curr_zone, prev_zone);
 			else
-			{
-				ft_bzero(curr_block + 1, ft_strlen((void *)(curr_block + 1)));
 				merge_block(curr_block, prev_block);
-			}
 			return (SUCCESS);
 		}
 		prev_block = curr_block;

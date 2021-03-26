@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 10:47:32 by mfilahi           #+#    #+#             */
-/*   Updated: 2021/03/25 18:16:36 by mfilahi          ###   ########.fr       */
+/*   Updated: 2021/03/26 10:03:13 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ void	*find_free_block_in_extra_zone(size_t total_size)
 			curr_block = curr_zone->head_block;
 			while (curr_block)
 			{
-				if (!curr_block->used &&\
-					curr_block->block_size >= total_size &&\
+				if (!curr_block->used &&
+					curr_block->block_size >= total_size &&
 					(curr_block->used = TRUE))
 					return (curr_block);
 				curr_block = curr_block->next;
@@ -80,31 +80,6 @@ void	*find_free_block_in_extra_zone(size_t total_size)
 		curr_zone = curr_zone->next;
 	}
 	return (get_empty_extra_zone(total_size));
-}
-
-/*
- ** - SPLIT MERGED BLOCKS
-*/
-
-void	*split_merged_blocks(t_block *block, size_t total_size)
-{
-	t_block *new_block;
-
-	new_block = NULL;
-	if (block->block_size > total_size && (block->block_size - total_size))
-	{
-		new_block = block + (block->block_size - total_size);
-		new_block->block_size = block->block_size - total_size;
-		new_block->used = FALSE;
-		if (block->merged_count > 0)
-			new_block->merged_count = block->merged_count - 1;
-		new_block->next = block->next;
-		block->merged_count = 0;
-		block->block_size = total_size;
-		block->used = TRUE;
-		block->next = new_block;
-	}
-	return (block);
 }
 
 /*
