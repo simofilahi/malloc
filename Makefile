@@ -11,7 +11,6 @@ CFLAG = -Wextra -Werror -Wall
 SRCS = srcs/free.c\
  	  srcs/realloc.c\
 	  srcs/malloc.c\
-	  srcs/calloc.c\
 	  srcs/show_alloc_mem.c\
 	  srcs/show_alloc_mem_ex.c\
 	  srcs/malloc_helper.c\

@@ -30,15 +30,48 @@
 //     }
 // }
 
-void *func()
-{
-    char *ptr = NULL;
-    ptr = (char *)malloc(sizeof(char) * 10);
-    return NULL;
-}
+// void *func()
+// {
+//     char *ptr = NULL;
+//     ptr = (char *)malloc(sizeof(char) * 10);
+//     return NULL;
+// }
 
 int main()
 {
+	// char *ptr = NULL;
+	// char *nbr = NULL;
+	// char *str = NULL;
+	// char *s = NULL;
+  // char *t = NULL;
+
+	// ptr = malloc(100);
+	// nbr = malloc(200);
+  // t = malloc(150);
+	// str = malloc(5000);
+	// s = malloc(50000);
+	// show_alloc_mem();
+  // ft_putstr("******************************\n");
+	// free(ptr);
+  // show_alloc_mem();
+  //  ft_putstr("******************************\n");
+	// free(nbr);
+ 	// show_alloc_mem();
+  //   ft_putstr("******************************\n");
+  // free(t);
+  // show_alloc_mem();
+  //  ft_putstr("******************************\n");
+  // ptr = malloc(100);
+	// show_alloc_mem();
+  //  ft_putstr("******************************\n");
+  // 	ptr = malloc(10);
+	// show_alloc_mem();
+  //  ft_putstr("******************************\n");
+
+  // 	// nbr = malloc(50);
+	// show_alloc_mem();
+	// free(s);
+	// show_alloc_mem();
     // char *ptr = NULL;
     // char *str = NULL;
     // char *nbr = NULL;
@@ -90,24 +123,24 @@ int main()
     // show_alloc_mem_ex();
     // free(ptr);
     // show_alloc_mem_ex();
-    pthread_t thread_id[3];
+   // pthread_t thread_id[3];
 
     // // i = 0;
     // // while (i < 100)
     // // {
     // malloc(500);
 
-    pthread_create(&thread_id[0], NULL, func, NULL);
-    pthread_create(&thread_id[1], NULL, func, NULL);
-    pthread_create(&thread_id[2], NULL, func, NULL);
-    pthread_join(thread_id[0], NULL);
+  //  pthread_create(&thread_id[0], NULL, func, NULL);
+    //pthread_create(&thread_id[1], NULL, func, NULL);
+    //pthread_create(&thread_id[2], NULL, func, NULL);
+    //pthread_join(thread_id[0], NULL);
     // ft_putstr("hey 1\n");
-    pthread_join(thread_id[1], NULL);
+    //pthread_join(thread_id[1], NULL);
     // ft_putstr("hey 2\n");
-    pthread_join(thread_id[2], NULL);
+   // pthread_join(thread_id[2], NULL);
     // ft_putstr("hey 3\n");
-    show_alloc_mem();
-    pthread_mutex_destroy(&g_lock);
+    //show_alloc_mem();
+    //pthread_mutex_destroy(&g_lock);
 
     //     i++;
     // }

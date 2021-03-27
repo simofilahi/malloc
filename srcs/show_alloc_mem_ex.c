@@ -19,7 +19,7 @@
 static void	print_zones_name(t_mem_zone *curr_mem_zone)
 {
 	if (curr_mem_zone->type == TINY_ZONE)
-		min_printf("TINY : ", curr_mem_zone, 0);
+		min_printf("TINY  : ", curr_mem_zone, 0);
 	else if (curr_mem_zone->type == SMALL_ZONE)
 		min_printf("SMALL : ", curr_mem_zone, 0);
 	else if (curr_mem_zone->type == EXTRA_ZONE)
@@ -32,50 +32,25 @@ static void	print_zones_name(t_mem_zone *curr_mem_zone)
 }
 
 /*
- ** - CALCULATE BLOCK SIZE
-*/
-
-void		calculateblock_size(t_block *curr, size_t *block_size)
-{
-	size_t block_size_count;
-
-	block_size_count = (sizeof(t_block) * (curr->merged_count + 1));
-	if (!curr->merged_count)
-	{
-		if (block_size_count > curr->block_size)
-			*block_size = 0;
-		else
-			*block_size = curr->block_size - sizeof(t_block);
-	}
-	else
-	{
-		if (block_size_count > curr->block_size)
-			*block_size = 0;
-		else
-			*block_size = curr->block_size - block_size_count;
-	}
-}
-
-/*
  ** - PRINT BLOCK INFORMATION
 */
 
 static void	print_blocks_infos(t_block *curr, size_t *total_size)
 {
-	size_t block_size;
+	size_t size;
 
-	calculateblock_size(curr, &block_size);
+	size = curr->alloc_size - sizeof(t_block);
 	min_printf("   -> BLOCK          : ", curr + 1, 0);
-	min_printf(" - ", (((void *)(curr + 1)) + block_size), 1);
+	min_printf(" - ", (((void *)(curr + 1)) + size), 1);
 	ft_putstr("     - USED          : ");
 	if (curr->used)
-		ft_putendl("YES");
+		ft_putendl("\033[1;32mYES\033[0m");
 	else
-		ft_putendl("NO");
+		ft_putendl("\033[1;31mNO\033[0m");
 	ft_putstr("     - SIZE          : ");
-	ft_putnbr((long)block_size);
+	ft_putnbr((long)size);
 	ft_putendl(" bytes");
-	*total_size += block_size;
+	*total_size += size;
 }
 
 /*

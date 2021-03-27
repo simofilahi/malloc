@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 17:42:27 by mfilahi           #+#    #+#             */
-/*   Updated: 2021/03/26 13:58:40 by mfilahi          ###   ########.fr       */
+/*   Updated: 2021/03/27 15:19:03 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ typedef struct			s_block
 {
 	size_t				block_size;
 	struct s_block		*next;
-	int					used;
-	int					merged_count;
+	size_t				used;
+	size_t				alloc_size;
 }						t_block;
 
 /*
@@ -99,7 +99,8 @@ void					*create_extra_zone(size_t total_size);
 */
 
 void					free(void *ptr);
-void					merge_block(t_block *prev_block, t_block *curr_block);
+void					merge_block(t_mem_zone *zone, t_block *prev_block,
+		t_block *curr_block);
 
 /*
  ** - REALLOC FUNCTIONS
@@ -112,11 +113,6 @@ void					*realloc(void *ptr, size_t size);
 */
 
 void					*reallocf(void *ptr, size_t size);
-
-/*
- ** CALLOC FUNCTIONS
-*/
-void					*calloc(size_t count, size_t size);
 
 /*
  ** - MALLOC FUNCTIONS

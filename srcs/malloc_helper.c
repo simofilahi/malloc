@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 10:47:32 by mfilahi           #+#    #+#             */
-/*   Updated: 2021/03/26 10:03:13 by mfilahi          ###   ########.fr       */
+/*   Updated: 2021/03/27 15:23:39 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	*fill_block(t_mem_zone *zone, size_t total_size)
 
 	block = zone->start_zone;
 	block->block_size = total_size;
+	block->alloc_size = total_size;
 	block->used = TRUE;
-	block->merged_count = 0;
 	block->next = NULL;
 	zone->tail_block->next = block;
 	zone->tail_block = zone->tail_block->next;
@@ -71,9 +71,12 @@ void	*find_free_block_in_extra_zone(size_t total_size)
 			while (curr_block)
 			{
 				if (!curr_block->used &&
-					curr_block->block_size >= total_size &&
-					(curr_block->used = TRUE))
+						curr_block->block_size >= total_size &&
+						(curr_block->used = TRUE))
+				{
+					curr_block->alloc_size = total_size;
 					return (curr_block);
+				}
 				curr_block = curr_block->next;
 			}
 		}

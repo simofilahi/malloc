@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 09:58:02 by mfilahi           #+#    #+#             */
-/*   Updated: 2021/03/26 14:26:28 by mfilahi          ###   ########.fr       */
+/*   Updated: 2021/03/27 15:21:27 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,15 @@
  ** - CALL MUNMAP TO DEALLOCATE AN ZONE
 */
 
-void	drop_zone(t_block *ptr, t_mem_zone *curr_zone, t_mem_zone *prev_zone)
+void	drop_zone(t_block *curr_block, t_mem_zone *curr_zone,
+		t_mem_zone *prev_zone)
 {
 	t_mem_zone	*next_zone;
 	size_t		total_size;
 
 	next_zone = curr_zone->next;
-	total_size = curr_zone->zone_size + ptr->block_size + sizeof(t_mem_zone);
+	total_size = curr_zone->zone_size + curr_block->block_size +
+		sizeof(t_mem_zone);
 	if (!(munmap(curr_zone, total_size)))
 		prev_zone->next = next_zone;
 }
@@ -31,7 +33,8 @@ void	drop_zone(t_block *ptr, t_mem_zone *curr_zone, t_mem_zone *prev_zone)
  ** - SET BLOCK FREE
 */
 
-int		free_block(t_mem_zone *curr_zone, t_mem_zone *prev_zone, t_block *ptr)
+int		free_block(t_mem_zone *curr_zone, t_mem_zone *prev_zone,
+		t_block *ptr)
 {
 	t_block *curr_block;
 	t_block *prev_block;
@@ -40,12 +43,13 @@ int		free_block(t_mem_zone *curr_zone, t_mem_zone *prev_zone, t_block *ptr)
 	prev_block = curr_block;
 	while (curr_block)
 	{
-		if (ptr == curr_block && !(curr_block->used = FALSE))
+		if (ptr == curr_block && !(curr_block->used = FALSE)
+				&& !(curr_block->alloc_size == 0))
 		{
 			if (curr_zone->type == LARGE_ZONE)
 				drop_zone(ptr, curr_zone, prev_zone);
 			else
-				merge_block(curr_block, prev_block);
+				merge_block(curr_zone, curr_block, prev_block);
 			return (SUCCESS);
 		}
 		prev_block = curr_block;

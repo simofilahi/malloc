@@ -20,8 +20,8 @@ void	*fill_first_block(t_mem_zone *zone, size_t total_size)
 {
 	zone->head_block = zone->start_zone;
 	zone->head_block->block_size = total_size;
+	zone->head_block->alloc_size = total_size;
 	zone->head_block->used = TRUE;
-	zone->head_block->merged_count = 0;
 	zone->head_block->next = NULL;
 	zone->tail_block = zone->head_block;
 	zone->zone_size -= total_size;
@@ -41,10 +41,11 @@ void	*find_free_block_in_zone(t_mem_zone *zone, size_t total_size)
 	curr_block = zone->head_block;
 	while (curr_block)
 	{
-		if (!curr_block->used &&
+		if ((curr_block->used == FALSE) &&
 			curr_block->block_size >= total_size &&
 			(curr_block->used = TRUE))
 		{
+			curr_block->alloc_size = total_size;
 			return (curr_block);
 		}
 		curr_block = curr_block->next;
